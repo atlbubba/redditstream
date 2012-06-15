@@ -103,13 +103,10 @@ var Ui = {
 				continue;
 			}
 
-			$e('div.comment', {
-				'children': [
-					$e('div', {'class': 'c-username', 'text':item.data.author}),
-					$e('div', {'class': 'c-body', 'html': item.data.body_html.decodeEntities()})
-				]
+			item.data.raw_html = item.data.body_html.decodeEntities();
+			item.data.formatted_time = '17:23s';
+			new JsTemplate('tmpl-comment').render(item.data).inject('c-list');
 
-			}).inject('c-list');
 		}
 	},
 
@@ -122,6 +119,17 @@ window.addEvent('load', Ui.init.bind(Ui));
 
 </script>
 
+<script id='tmpl-comment' type='text/html'>
+
+<div class='comment'>
+	<div class='c-username'>#{author}</div>
+	<div class='c-body'>
+		<div class='right c-time'>#{formatted_time}</div>
+		<div>#{raw_html}</div>
+	</div>
+</div>
+
+</script>
 
 </head>
 

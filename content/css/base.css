@@ -6,6 +6,7 @@ html, body {
 
 #c-list {
 	margin-left: 48px;
+	margin-bottom: 24px;
 	width: 55%;
 }
 
@@ -51,4 +52,10 @@ html, body {
 
 .c-body p {
 	margin-top: 4px;
+}
+
+.c-time {
+	font-size: 9pt;
+	background: white;
+	padding: 2px;
 }

@@ -26,6 +26,56 @@ String.implement({
 	})()
 });
 
+/*
+ * JsTemplate: convert template into an element object.
+ *
+ * example:
+ * <!-- this goes in <head>, the browser will ignore it if the type is not text/javascript -->
+ * <script id='tmpl-entry' type='text/html'>
+ *   <div>
+ *     <b>#{title}<b>
+ *     <div>#{text}</div>
+ *   </div>
+ * </script>
+ *
+ * // replaces #{title} & #{text} with the actual text in the data object, then
+ * // inserts the element into <body>
+ * new JsTemplate('tmpl-entry').render({title: 'test', text:'test text'}).inject('body');
+ *
+ * License: MIT-Style License
+ * Nathan Reed (c) 2010
+ */
+var JsTemplate = new Class({
+   initialize: function(elem) {
+      this.element = $(elem);
+      this.regex = /\\?#\{([^{}]+)\}/g; // matches '#{keyword}'
+   },
+
+   render: function(data) {
+      if($defined(this.element)) {
+         // replaces #{name} with whatever is in data.name
+         // but first we need to normalize the innerHTML
+         var html_string = this.element.innerHTML.clean().trim(); // collapses mulitple whitespace down to single spaces
+         var is_td = false;
+
+         if(html_string.test(/^<td/i)) {
+            // tables are treated differently. we are not allow to just parse and insert
+            // them willy nilly.
+            html_string = "<table><tbody><tr>" + html_string + "</tr></tbody></table>";
+            is_td = true;
+         }
+
+         var e = new Element('div', {'html': html_string.substitute(data, this.regex)});
+
+         if(is_td) {
+            return e.getFirst('table').getFirst('tbody').getFirst('tr').getFirst();
+         } else {
+            return e.getFirst();
+         }
+      }
+   }
+});
+
 // @depends mootools-1.2.4-core.js
 //
 // $e(): Use the mootools new element function to chain up element creation in a nice way
