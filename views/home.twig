@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<title>title</title>
+<title>reddit-stream</title>
 
 <link rel="stylesheet" href="content/css/default.css" type="text/css">
 <link rel="stylesheet" href="content/css/base.css" type="text/css">
@@ -30,40 +30,51 @@ var Ui = {
 			'onComplete': function(data){
 				var post_info = data[0].data.children[0];
 				var comments = data[1].data.children.reverse();
-				var start_index = 0;
+				var start_index = this.new_comment(comments, this.last_id);
 
-				//$('c-info').innerHTML = post_info.data.selftext_html.decodeEntities();
-
-				// loop through the list of comments to find the most recent one from last time.
-				// Everything after that is new. If we don't find the id, then everything is new
-				for(var i=0; i < comments.length; i++) {
-					if(comments[i].data.id == this.last_id) {
-						start_index = i + 1;
-						break;
-					}
-				}
-
-				for(var i=start_index; i < comments.length; i++) {
-					var item = comments[i];
-					if(!$defined(item.data.body)) {
-						continue;
-					}
-
-					$e('div.comment', {
-						'children': [
-							$e('div', {'class': 'c-username', 'text':item.data.author}),
-							$e('div', {'class': 'c-body', 'html': item.data.body_html.decodeEntities()})
-						]
-
-					}).inject('c-list');
-				}
-
+				this.add_comments(comments, start_index);
 				this.last_id = comments.getLast().data.id;
 
 				window.scrollTo(0, document.body.scrollHeight);
 
 			}.bind(this)
 		}).send();
+	},
+
+	// returns the array index of the first new comment.
+	//
+	// if none are new it will return comments.length.
+	// if all a new it will return 0
+	new_comment: function(comments, last_id) {
+		var start_index = 0;
+
+		// loop through the list of comments to find the most recent one from last time.
+		// Everything after that is new. If we don't find the id, then everything is new
+		for(var i=0; i < comments.length; i++) {
+			if(comments[i].data.id == this.last_id) {
+				start_index = i + 1;
+				break;
+			}
+		}
+
+		return start_index;
+	},
+
+	add_comments: function(comments, start_index) {
+		for(var i=start_index; i < comments.length; i++) {
+			var item = comments[i];
+			if(!$defined(item.data.body)) {
+				continue;
+			}
+
+			$e('div.comment', {
+				'children': [
+					$e('div', {'class': 'c-username', 'text':item.data.author}),
+					$e('div', {'class': 'c-body', 'html': item.data.body_html.decodeEntities()})
+				]
+
+			}).inject('c-list');
+		}
 	},
 
 	all_info: function() {
@@ -83,7 +94,7 @@ window.addEvent('load', Ui.init.bind(Ui));
 <div id='c-list' class='left'></div>
 
 <div id='sidebar' class='left'>
-
+	<div id='post-title'></div>
 </div>
 
 <div class='clear'></div>
