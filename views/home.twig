@@ -20,6 +20,7 @@ _thread_id = '{{thread_id}}';
 
 var Ui = {
 	init: function() {
+		this.first_load = true;
 		this.last_id = null;
 		this.refresh();
 
@@ -37,6 +38,11 @@ var Ui = {
 				var comments = data[1].data.children.reverse();
 				var start_index = this.new_comment(comments, this.last_id);
 				var was_bottom = this.is_at_bottom();
+
+				if(this.first_load) {
+					this.set_post_info(post_info);
+					this.first_load = false;
+				}
 
 				this.add_comments(comments, start_index);
 				this.last_id = comments.getLast().data.id;
@@ -81,6 +87,13 @@ var Ui = {
 		}
 
 		return start_index;
+	},
+
+	set_post_info: function(post_info) {
+		$e('a', {
+			'text':post_info.data.title,
+			'href':post_info.data.url
+		}).inject('post-title');
 	},
 
 	add_comments: function(comments, start_index) {

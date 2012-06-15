@@ -6,7 +6,7 @@ html, body {
 
 #c-list {
 	margin-left: 48px;
-	width: 50%;
+	width: 55%;
 }
 
 /* sidebar */
@@ -15,7 +15,7 @@ html, body {
 	position: fixed;
 	top:0;
 	left: 60%;
-	width: 30%;
+	width: 40%;
 }
 
 #c-info {
@@ -30,7 +30,7 @@ html, body {
 }
 
 #sidebar #post-title {
-	font-size: 28pt;
+	font-size: 20pt;
 }
 
 /* main body */
