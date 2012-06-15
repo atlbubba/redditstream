@@ -1,0 +1,45 @@
+html, body {
+	height: 100%;
+}
+
+#c-list {
+	margin: 48px;
+	width: 50%;
+}
+
+#sidebar {
+	position: fixed;
+	top:0;
+	left: 60%;
+	width: 30%;
+}
+
+#c-info {
+	font-size: 9pt;
+	height: 400px;
+	overflow: hidden;
+}
+
+#sidebar.expanded {
+	height: 100%;
+	overflow: scroll;
+}
+
+.comment {
+	margin-top: 12px;
+}
+
+.comment .c-username {
+	font-weight: bold;
+	font-size: 10pt;
+}
+
+.c-body {
+	background: #eee;
+	margin-top: 4px;
+	padding: 4px;
+}
+
+.c-body p {
+	margin-top: 4px;
+}
