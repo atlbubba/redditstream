@@ -35,7 +35,7 @@ var Ui = {
 			'onComplete': function(data){
 				var post_info = data[0].data.children[0];
 				var comments = data[1].data.children.reverse();
-				var start_index = 0;//this.new_comment(comments, this.last_id);
+				var start_index = this.new_comment(comments, this.last_id);
 				var was_bottom = this.is_at_bottom();
 
 				this.add_comments(comments, start_index);
