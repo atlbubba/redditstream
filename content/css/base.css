@@ -76,3 +76,9 @@ html, body {
 	border-left: 1px solid #ddd;
 }
 
+.c-replies div.loading {
+	margin-top: 12px;
+	font-style: italic;
+	padding-left: 8px;
+	border-left: 1px solid #ddd;
+}

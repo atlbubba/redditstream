@@ -136,6 +136,28 @@ var Ui = {
 
 	all_info: function() {
 		$('sidebar').addClass('expanded');
+	},
+
+	refresh_replies: function(parent_id) {
+		var replies_elem = $('c-rpl-' + parent_id);
+		var request_url = 'http://www.reddit.com/comments/' + _thread_id + '/_/' + parent_id + '.json?limit=50'
+
+		replies_elem.empty();
+		$e('div.loading', 'loading...').inject(replies_elem);
+
+		new Request.JSONP({
+			'url':request_url,
+			'callbackKey':'jsonp',
+			'onComplete': function(data){
+				replies_elem.empty();
+				var comment = data[1].data.children[0];
+
+				if(comment.data.replies != '') {
+					var replies = comment.data.replies.data.children;
+					this.add_comments(replies, 0, replies_elem, false);
+				}
+			}.bind(this)
+		}).send();
 	}
 }
 
@@ -149,6 +171,7 @@ window.addEvent('load', Ui.init.bind(Ui));
 	<div class='c-header'>
 		<span class='c-username'>#{author}</span>
 		<span class='c-points'>(#{points})</span>
+		<a href='javascript:Ui.refresh_replies.bind(Ui)("#{id}")'>refresh</a>
 	</div>
 
 	<div class='c-body'>
