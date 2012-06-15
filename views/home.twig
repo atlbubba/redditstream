@@ -22,6 +22,7 @@ var Ui = {
 	init: function() {
 		this.first_load = true;
 		this.last_id = null;
+		this.prev_time = null;
 		this.refresh();
 
 		this.refresh.periodical(10000, this);
@@ -97,7 +98,7 @@ var Ui = {
 	},
 
 	add_comments: function(comments, start_index, insert_into, is_root) {
-		var prev_time = null;
+
 
 		comments = comments || [];
 		insert_into = insert_into || 'c-list';
@@ -121,9 +122,9 @@ var Ui = {
 				item.data.points = '+' + item.data.points;
 			}
 
-			if(prev_time != item.data.formatted_time) {
+			if(this.prev_time != item.data.formatted_time) {
 				item.data.time_hidden = '';
-				prev_time = item.data.formatted_time;
+				this.prev_time = item.data.formatted_time;
 			}
 
 			new JsTemplate('tmpl-comment').render(item.data).inject(insert_into);
