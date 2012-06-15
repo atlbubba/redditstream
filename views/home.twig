@@ -23,7 +23,7 @@ var Ui = {
 		this.last_id = null;
 		this.refresh();
 
-		this.refresh.periodical(30000, this);
+		this.refresh.periodical(10000, this);
 	},
 
 	refresh: function() {
@@ -35,15 +35,33 @@ var Ui = {
 			'onComplete': function(data){
 				var post_info = data[0].data.children[0];
 				var comments = data[1].data.children.reverse();
-				var start_index = this.new_comment(comments, this.last_id);
+				var start_index = 0;//this.new_comment(comments, this.last_id);
+				var was_bottom = this.is_at_bottom();
 
 				this.add_comments(comments, start_index);
 				this.last_id = comments.getLast().data.id;
 
-				window.scrollTo(0, document.body.scrollHeight);
+				if(was_bottom) {
+					window.scrollTo(0, document.body.scrollHeight);
+				}
 
 			}.bind(this)
 		}).send();
+	},
+
+	is_at_bottom: function() {
+		var totalHeight, currentScroll, visibleHeight;
+
+		if (document.documentElement.scrollTop) {
+			currentScroll = document.documentElement.scrollTop;
+		} else {
+			currentScroll = document.body.scrollTop;
+		}
+
+		totalHeight = document.body.offsetHeight;
+		visibleHeight = document.documentElement.clientHeight;
+
+		return totalHeight <= (currentScroll + visibleHeight);
 	},
 
 	// returns the array index of the first new comment.
