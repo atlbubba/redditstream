@@ -39,9 +39,12 @@ html, body {
 	margin-top: 12px;
 }
 
+.comment .c-header {
+	font-size: 10pt;
+}
+
 .comment .c-username {
 	font-weight: bold;
-	font-size: 10pt;
 }
 
 .c-body {

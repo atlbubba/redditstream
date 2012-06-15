@@ -109,6 +109,11 @@ var Ui = {
 			item.data.created_utc_date = new Date(item.data.created_utc * 1000);
 			item.data.formatted_time = item.data.created_utc_date.format('%X');
 			item.data.time_hidden = 'hidden';
+			item.data.points = item.data.ups - item.data.downs;
+
+			if(item.data.points >= 0) {
+				item.data.points = '+' + item.data.points;
+			}
 
 			if(prev_time != item.data.formatted_time) {
 				item.data.time_hidden = '';
@@ -133,7 +138,11 @@ window.addEvent('load', Ui.init.bind(Ui));
 <script id='tmpl-comment' type='text/html'>
 
 <div class='comment'>
-	<div class='c-username'>#{author}</div>
+	<div class='c-header'>
+		<span class='c-username'>#{author}</span>
+		<span class='c-points'>(#{points})</span>
+	</div>
+
 	<div class='c-body'>
 		<div class='right c-time #{time_hidden}'>#{formatted_time}</div>
 		<div>#{raw_html}</div>
