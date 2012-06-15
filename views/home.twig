@@ -97,6 +97,8 @@ var Ui = {
 	},
 
 	add_comments: function(comments, start_index) {
+		var prev_time = null;
+
 		for(var i=start_index; i < comments.length; i++) {
 			var item = comments[i];
 			if(!$defined(item.data.body)) {
@@ -104,7 +106,16 @@ var Ui = {
 			}
 
 			item.data.raw_html = item.data.body_html.decodeEntities();
-			item.data.formatted_time = '17:23s';
+			item.data.created_utc_date = new Date(item.data.created_utc * 1000);
+			item.data.formatted_time = item.data.created_utc_date.format('%X');
+			item.data.time_hidden = 'hidden';
+
+			if(prev_time != item.data.formatted_time) {
+				item.data.time_hidden = '';
+				prev_time = item.data.formatted_time;
+			}
+
+
 			new JsTemplate('tmpl-comment').render(item.data).inject('c-list');
 
 		}
@@ -124,7 +135,7 @@ window.addEvent('load', Ui.init.bind(Ui));
 <div class='comment'>
 	<div class='c-username'>#{author}</div>
 	<div class='c-body'>
-		<div class='right c-time'>#{formatted_time}</div>
+		<div class='right c-time #{time_hidden}'>#{formatted_time}</div>
 		<div>#{raw_html}</div>
 	</div>
 </div>

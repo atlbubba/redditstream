@@ -59,3 +59,7 @@ html, body {
 	background: white;
 	padding: 2px;
 }
+
+.c-body div.hidden {
+	display:none;
+}
