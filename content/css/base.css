@@ -47,6 +47,10 @@ html, body {
 	font-weight: bold;
 }
 
+.comment .c-replies {
+	margin-left: 24px;
+}
+
 .c-body {
 	background: #eee;
 	margin-top: 4px;
@@ -66,3 +70,9 @@ html, body {
 .c-body div.hidden {
 	display:none;
 }
+
+.c-replies .comment {
+	padding-left: 8px;
+	border-left: 1px solid #ddd;
+}
+

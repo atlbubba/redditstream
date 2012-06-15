@@ -96,8 +96,14 @@ var Ui = {
 		}).inject('post-title');
 	},
 
-	add_comments: function(comments, start_index) {
+	add_comments: function(comments, start_index, insert_into, is_root) {
 		var prev_time = null;
+
+		comments = comments || [];
+		insert_into = insert_into || 'c-list';
+		if(!$defined(is_root)) {
+			is_root = true;
+		}
 
 		for(var i=start_index; i < comments.length; i++) {
 			var item = comments[i];
@@ -120,9 +126,11 @@ var Ui = {
 				prev_time = item.data.formatted_time;
 			}
 
+			new JsTemplate('tmpl-comment').render(item.data).inject(insert_into);
 
-			new JsTemplate('tmpl-comment').render(item.data).inject('c-list');
-
+			if(is_root && item.data.replies != '') {
+				this.add_comments(item.data.replies.data.children, 0, 'c-rpl-' + item.data.id, false)
+			}
 		}
 	},
 
@@ -137,7 +145,7 @@ window.addEvent('load', Ui.init.bind(Ui));
 
 <script id='tmpl-comment' type='text/html'>
 
-<div class='comment'>
+<div id='c-#{id}' class='comment'>
 	<div class='c-header'>
 		<span class='c-username'>#{author}</span>
 		<span class='c-points'>(#{points})</span>
@@ -147,6 +155,8 @@ window.addEvent('load', Ui.init.bind(Ui));
 		<div class='right c-time #{time_hidden}'>#{formatted_time}</div>
 		<div>#{raw_html}</div>
 	</div>
+
+	<div id='c-rpl-#{id}' class='c-replies'></div>
 </div>
 
 </script>
