@@ -5,7 +5,7 @@ var Ui = {
 		this.prev_time = null;
 		this.refresh();
 
-		this.refresh.periodical(10000, this);
+		this.refresh.periodical(30000, this);
 	},
 
 	refresh: function() {
@@ -20,13 +20,13 @@ var Ui = {
 				var start_index = this.new_comment(comments, this.last_id);
 				var was_bottom = this.is_at_bottom();
 
+				this.add_comments(comments, start_index);
+				this.refresh_comments(comments, start_index);
+
 				if(this.first_load) {
 					this.set_post_info(post_info);
 					this.first_load = false;
 				}
-
-				this.add_comments(comments, start_index);
-				this.refresh_comments(comments, start_index);
 
 				this.last_id = comments.getLast().data.id;
 
@@ -117,7 +117,14 @@ var Ui = {
 				item.data.see_replies_link = 'load replies (' + item.data.replies.data.children.length + ')';
 			}
 
-			new JsTemplate('tmpl-comment').render(item.data).inject(insert_into);
+			var jst = new JsTemplate('tmpl-comment');
+			var e = jst.render(item.data).inject(insert_into);
+
+			if(!this.first_load) {
+				// not the first element? then fade it in
+				e.style.opacity = '0';
+				e.fade();
+			}
 
 			if(is_root && item.data.replies != '') {
 				this.add_comments(item.data.replies.data.children, 0, 'c-rpl-' + item.data.id, false)
