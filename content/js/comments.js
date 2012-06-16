@@ -20,6 +20,10 @@ var Ui = {
 				var start_index = this.new_comment(comments, this.last_id);
 				var was_bottom = this.is_at_bottom();
 
+				if(this.first_load) {
+					$('c-list').empty();
+				}
+
 				this.add_comments(comments, start_index);
 				this.refresh_comments(comments, start_index);
 

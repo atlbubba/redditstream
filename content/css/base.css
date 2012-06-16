@@ -71,6 +71,12 @@
 
 /* main body */
 
+#c-list .loading {
+	font-size: 22pt;
+	text-align: center;
+	margin-top: 32px;
+}
+
 /* comments */
 .comment {
 	margin-top: 12px;
