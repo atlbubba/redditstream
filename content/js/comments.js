@@ -1,5 +1,6 @@
 var Ui = {
 	init: function() {
+		this.load_count = 0;
 		this.first_load = true;
 		this.last_id = null;
 		this.prev_time = null;
@@ -27,8 +28,14 @@ var Ui = {
 				this.add_comments(comments, start_index);
 				this.refresh_comments(comments, start_index);
 
-				if(this.first_load) {
+				if(this.load_count % 5 == 0) {
+					// we only want to reload the page destription every so often
+					// because we loose the scroll position when this happens...
 					this.set_post_info(post_info);
+				}
+
+				if(this.first_load) {
+					this.set_page_info(post_info);
 					this.first_load = false;
 				}
 
@@ -37,6 +44,8 @@ var Ui = {
 				if(was_bottom) {
 					window.scrollTo(0, document.body.scrollHeight);
 				}
+
+				this.load_count++;
 
 			}.bind(this)
 		}).send();
@@ -78,6 +87,9 @@ var Ui = {
 
 	set_post_info: function(post_info) {
 		$('post-info').innerHTML = post_info.data.selftext_html.decodeEntities();
+	},
+
+	set_page_info: function(post_info) {
 
 		$e('a', {
 			'text':post_info.data.title,
