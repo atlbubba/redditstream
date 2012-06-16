@@ -155,7 +155,8 @@ var Ui = {
 				continue;
 			}
 
-			elem.getElement('.c-points').innerHTML = this.format_points(item.data.ups - item.data.downs);
+			var karma = comment.data.ups - comment.data.downs;
+			elem.getElement('.c-points').innerHTML = '(' + this.format_points(karma) + ')';
 
 			if(comment.data.replies != '') {
 				// if we  have new replies, then update the count on the page
