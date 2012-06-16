@@ -128,7 +128,7 @@ var Ui = {
 				this.prev_time = item.data.formatted_time;
 			}
 
-			if(!is_root && item.data.replies != '') {
+			if(!is_root && item.data.replies != '' && item.data.replies != null) {
 				// we have replies, but are not going to load them because we are already too deep
 				// so just flag the refresh link and move on
 				item.data.hasreplies = 'has-replies';
@@ -151,14 +151,15 @@ var Ui = {
 			var comment = comments[i];
 			var elem = $('c-' + comment.data.id);
 
-			if(elem == null) {
+			if(elem == null || comment == null) {
 				continue;
 			}
 
 			var karma = comment.data.ups - comment.data.downs;
 			elem.getElement('.c-points').innerHTML = '(' + this.format_points(karma) + ')';
 
-			if(comment.data.replies != '') {
+			if(comment.data.replies != null && comment.data.replies != '') {
+
 				// if we  have new replies, then update the count on the page
 				var cur_reply_count = elem.getElement('.c-replies').getChildren().length;
 				var new_reply_count = comment.data.replies.data.children.length;
