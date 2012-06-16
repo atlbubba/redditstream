@@ -40,11 +40,11 @@
 	font-size: 9pt;
 	overflow: hidden;
 	border: 1px solid #ccc;
+	max-height: 70%;
 }
 
 #post-info.expanded {
 	overflow: auto;
-	max-height: 600px;
 }
 
 #post-info p {
@@ -58,6 +58,13 @@
 #post-info table td {
 	border: 1px solid gray;
 	padding: 2px;
+}
+
+/* side bar - page info footer thing */
+#page-info {
+	font-size: 9pt;
+	color: gray;
+	padding: 8px;
 }
 
 /* main body */
