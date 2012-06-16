@@ -18,7 +18,9 @@ $app->get('/r/:subreddit/comments/:id/(:name/)', function($subreddit, $id, $name
 });
 
 $app->get('/comments/:id/', function($id) use ($app) {
-	$app->render('thread.twig', array('thread_id' => $id, 'root'=>'/redditstream'));
+
+	$fs_root = ($_SERVER['SERVER_NAME'] == 'localhost')? '/redditstream' : '';
+	$app->render('thread.twig', array('thread_id' => $id, 'root' => $fs_root));
 });
 
 ?>
