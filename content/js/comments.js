@@ -73,6 +73,8 @@ var Ui = {
 	},
 
 	set_post_info: function(post_info) {
+		$('post-info').innerHTML = post_info.data.selftext_html.decodeEntities();
+
 		$e('a', {
 			'text':post_info.data.title,
 			'href':post_info.data.url

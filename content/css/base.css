@@ -1,9 +1,5 @@
 /* general, page wide */
 
-html, body {
-	/*height: 100%;*/
-}
-
 #c-list {
 	margin-left: 48px;
 	margin-bottom: 24px;
@@ -17,24 +13,51 @@ html, body {
 	top:0;
 	left: 60%;
 	width: 40%;
-}
-
-#c-info {
-	font-size: 9pt;
-	height: 400px;
-	overflow: hidden;
-}
-
-#sidebar.expanded {
 	height: 100%;
-	overflow: scroll;
 }
 
 #sidebar #post-title {
 	font-size: 20pt;
 }
 
+#post-title {
+	margin-top: 12px;
+	margin-right: 12px;
+}
+
 #post-title a {
+	color: black;
+}
+
+#post-title a:hover {
+	text-decoration: none;
+}
+
+#post-info {
+	margin-top: 12px;
+	margin-right: 12px;
+	padding: 8px;
+	font-size: 9pt;
+	overflow: hidden;
+	border: 1px solid #ccc;
+}
+
+#post-info.expanded {
+	overflow: auto;
+	max-height: 600px;
+}
+
+#post-info p {
+	margin-top: 3px;
+}
+
+#post-info table {
+	border-collapse: collapse;
+}
+
+#post-info table td {
+	border: 1px solid gray;
+	padding: 2px;
 }
 
 /* main body */
