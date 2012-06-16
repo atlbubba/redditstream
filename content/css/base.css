@@ -71,7 +71,7 @@
 
 /* main body */
 
-#c-list .loading {
+#c-list #main-loading {
 	font-size: 22pt;
 	text-align: center;
 	margin-top: 32px;
