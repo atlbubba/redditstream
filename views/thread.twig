@@ -46,6 +46,8 @@ var Ui = {
 				}
 
 				this.add_comments(comments, start_index);
+				this.refresh_comments(comments, start_index);
+
 				this.last_id = comments.getLast().data.id;
 
 				if(was_bottom) {
@@ -118,12 +120,8 @@ var Ui = {
 			item.data.created_utc_date = new Date(item.data.created_utc * 1000);
 			item.data.formatted_time = item.data.created_utc_date.format('%X');
 			item.data.time_hidden = 'hidden';
-			item.data.points = item.data.ups - item.data.downs;
+			item.data.points = this.format_points(item.data.ups - item.data.downs);
 			item.data.see_replies_link = 'refresh';
-
-			if(item.data.points >= 0) {
-				item.data.points = '+' + item.data.points;
-			}
 
 			if(this.prev_time != item.data.formatted_time) {
 				item.data.time_hidden = '';
@@ -143,6 +141,45 @@ var Ui = {
 				this.add_comments(item.data.replies.data.children, 0, 'c-rpl-' + item.data.id, false)
 			}
 		}
+	},
+
+	// every time we refresh the data the vote counts etc for already
+	// displayed comments needs to be updated. The main reason to do this
+	// is to display a highlighted link if there are new replies
+	refresh_comments: function(comments, end_index) {
+		for(var i=0; i < end_index && i < comments.length; i++) {
+			var comment = comments[i];
+			var elem = $('c-' + comment.data.id);
+
+			if(elem == null) {
+				continue;
+			}
+
+			elem.getElement('.c-points').innerHTML = this.format_points(item.data.ups - item.data.downs);
+
+			if(comment.data.replies != '') {
+				// if we  have new replies, then update the count on the page
+				var cur_reply_count = elem.getElement('.c-replies').getChildren().length;
+				var new_reply_count = comment.data.replies.data.children.length;
+
+				if(cur_reply_count != new_reply_count) {
+					var refresh_link = elem.getElement('.r-link');
+					refresh_link.innerHTML = 'load replies (' + new_reply_count + ')';
+					refresh_link.addClass('has-replies');
+				}
+
+			}
+		}
+	},
+
+	format_points: function(count) {
+		var result = '' + count;
+
+		if(count >= 0) {
+			result = '+' + result;
+		}
+
+		return result;
 	},
 
 	all_info: function() {
