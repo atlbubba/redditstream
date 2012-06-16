@@ -95,6 +95,8 @@ var Ui = {
 			'text':post_info.data.title,
 			'href':post_info.data.url
 		}).inject('post-title');
+
+		document.title = post_info.data.title + ' - reddit-stream';
 	},
 
 	add_comments: function(comments, start_index, insert_into, is_root) {
@@ -117,6 +119,7 @@ var Ui = {
 			item.data.formatted_time = item.data.created_utc_date.format('%X');
 			item.data.time_hidden = 'hidden';
 			item.data.points = item.data.ups - item.data.downs;
+			item.data.see_replies_link = 'refresh';
 
 			if(item.data.points >= 0) {
 				item.data.points = '+' + item.data.points;
@@ -125,6 +128,13 @@ var Ui = {
 			if(this.prev_time != item.data.formatted_time) {
 				item.data.time_hidden = '';
 				this.prev_time = item.data.formatted_time;
+			}
+
+			if(!is_root && item.data.replies != '') {
+				// we have replies, but are not going to load them because we are already too deep
+				// so just flag the refresh link and move on
+				item.data.hasreplies = 'has-replies';
+				item.data.see_replies_link = 'load replies (' + item.data.replies.data.children.length + ')';
 			}
 
 			new JsTemplate('tmpl-comment').render(item.data).inject(insert_into);
@@ -141,10 +151,14 @@ var Ui = {
 
 	refresh_replies: function(parent_id) {
 		var replies_elem = $('c-rpl-' + parent_id);
+		var refresh_link = $('c-' + parent_id).getElement('.r-link');
 		var request_url = 'http://www.reddit.com/comments/' + _thread_id + '/_/' + parent_id + '.json?limit=50'
 
 		replies_elem.empty();
 		$e('div.loading', 'loading...').inject(replies_elem);
+
+		refresh_link.innerHTML = 'refresh';
+		refresh_link.removeClass('has-replies');
 
 		new Request.JSONP({
 			'url':request_url,
@@ -172,7 +186,10 @@ window.addEvent('load', Ui.init.bind(Ui));
 	<div class='c-header'>
 		<span class='c-username'>#{author}</span>
 		<span class='c-points'>(#{points})</span>
-		<a href='javascript:Ui.refresh_replies.bind(Ui)("#{id}")'>refresh</a>
+
+		<div class='right'>
+		<a class='r-link #{hasreplies}' href='javascript:Ui.refresh_replies.bind(Ui)("#{id}")'>#{see_replies_link}</a>
+		</div>
 	</div>
 
 	<div class='c-body'>

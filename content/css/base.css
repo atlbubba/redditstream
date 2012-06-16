@@ -35,21 +35,30 @@ html, body {
 }
 
 /* main body */
+
+/* comments */
 .comment {
 	margin-top: 12px;
 }
 
+/* comment header */
 .comment .c-header {
 	font-size: 10pt;
 }
 
-.comment .c-username {
+.c-header .c-username {
 	font-weight: bold;
 }
 
-.comment .c-replies {
-	margin-left: 24px;
+.c-header a.r-link {
+	padding: 2px 4px;
 }
+
+.c-header a.has-replies {
+	background: #FFF6BF;
+}
+
+/* comment body */
 
 .c-body {
 	border: 1px solid #ccc;
@@ -76,6 +85,12 @@ html, body {
 
 .c-body div.hidden {
 	display:none;
+}
+
+/* comment replies */
+
+.comment .c-replies {
+	margin-left: 24px;
 }
 
 .c-replies .comment {
