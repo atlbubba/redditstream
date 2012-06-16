@@ -13,7 +13,7 @@ $app->get('/', function() use ($app) {
 	$app->render('home.twig');
 });
 
-$app->get('/r/:subreddit/comments/:id/(:name)', function($subreddit, $id, $name) use ($app) {
+$app->get('/r/:subreddit/comments/:id/(:name/)', function($subreddit, $id, $name) use ($app) {
 	$app->redirect("/comments/$id");
 });
 
