@@ -13,7 +13,11 @@ $app->get('/', function() use ($app) {
 	$app->render('home.twig');
 });
 
-$app->get('/comments/:id', function($id) use ($app) {
+$app->get('/r/:subreddit/comments/:id/(:name)', function($subreddit, $id, $name) use ($app) {
+	$app->redirect("/comments/$id");
+});
+
+$app->get('/comments/:id/', function($id) use ($app) {
 	$app->render('thread.twig', array('thread_id' => $id, 'root'=>'/redditstream'));
 });
 
