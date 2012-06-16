@@ -168,6 +168,8 @@ var Ui = {
 					refresh_link.addClass('has-replies');
 				}
 
+				// be sure to update all the replies as well
+				this.refresh_comments(comment.data.replies.data.children, new_reply_count);
 			}
 		}
 	},
