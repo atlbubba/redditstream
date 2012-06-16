@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<title>reddit-stream</title>
+<title>reddit-stream - a better way to view live reddit threads</title>
 
 <link rel="stylesheet" href="content/css/default.css" type="text/css">
 <link rel="stylesheet" href="content/css/base.css" type="text/css">
@@ -12,6 +12,19 @@
 
 #c-main {
 	margin: 64px;
+}
+
+h1#title {
+	margin: 0;
+	padding: 0;
+}
+
+#info-block {
+	margin-top: 16px;
+}
+
+#images {
+	margin-top: 16px;
 }
 
 .bookmarklet {
@@ -39,9 +52,19 @@ function stream() {
 <body>
 
 <div id='c-main'>
-	<a class='bookmarklet' href="javascript:stream();">reddit stream (test)</a>
 
-	<a class='bookmarklet' href="javascript:(function stream() {var s = window.location.href.split('/');var id = s[s.indexOf('comments')+1];if(s.indexOf('comments') != -1) { window.location.href = 'http://reddit-stream.com/comments/' + id;	}})();">reddit stream</a>
+<h1 id='title'>A better way to view live-event reddit threads</h1>
+
+<div id='info-block'>
+	<div>Just replace reddit.com with reddit-stream.com on the comments page (or use this bookmartlet:
+	<a href="javascript:(function stream() {var s = window.location.href.split('/');var id = s[s.indexOf('comments')+1];if(s.indexOf('comments') != -1) { window.location.href = 'http://reddit-stream.com/comments/' + id;	}})();"><b>reddit stream</b></a>) to get a live updating list of the newest comments.
+	</div>
+</div>
+
+<div id='images'>
+	<img src='content/imgs/example-screenshot.png' style='width:800px; border: 1px solid gray; padding: 8px;'>
+</div>
+
 </div>
 
 <script type="text/javascript">

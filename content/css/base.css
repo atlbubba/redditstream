@@ -65,6 +65,8 @@
 	font-size: 9pt;
 	color: gray;
 	padding: 8px;
+	text-align: right;
+	margin-right: 4px;
 }
 
 /* main body */
