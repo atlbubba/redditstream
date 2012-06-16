@@ -151,7 +151,7 @@ var Ui = {
 			var comment = comments[i];
 			var elem = $('c-' + comment.data.id);
 
-			if(elem == null || comment == null) {
+			if(elem == null || comment == null || comment.kind != 't1') {
 				continue;
 			}
 
@@ -177,13 +177,11 @@ var Ui = {
 	},
 
 	format_points: function(count) {
-		var result = '' + count;
-
-		if(count >= 0) {
-			result = '+' + result;
+		if(count == 1) {
+			return count + ' point';
+		} else {
+			return count + ' points';
 		}
-
-		return result;
 	},
 
 	all_info: function() {
