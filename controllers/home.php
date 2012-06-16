@@ -10,11 +10,11 @@
 
 
 $app->get('/', function() use ($app) {
-	$app->redirect('comments/v1g6n');
+	$app->render('home.twig');
 });
 
 $app->get('/comments/:id', function($id) use ($app) {
-	$app->render('home.twig', array('thread_id' => $id, 'root'=>'/redditstream'));
+	$app->render('thread.twig', array('thread_id' => $id, 'root'=>'/redditstream'));
 });
 
 ?>
