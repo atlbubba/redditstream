@@ -11,7 +11,7 @@
 // dbpass.php should contain your username & password etc
 require_once 'config/esql.dbpass.php';
 
-abstract class EsqlTable {
+abstract class ESQLTable {
 
     public static function Select($options=array()) {
         return ESQL::Select(get_called_class(), $options);
@@ -48,9 +48,34 @@ class ESQL {
         return esql_query($query);
     }
 
+    public static function QueryFirstRow($query) {
+        if(self::$db === null) {self::$db = self::Open();}
+
+        $data = esql_query($query);
+        return ($data != false)? $data[0] : false;
+    }
+
+    public static function QueryFirstField($query) {
+        $row = self::QueryFirstRow($query);
+        return ($row != false)? current($row) : false;
+    }
+
     public static function Select($table, $options=array()) {
         if(self::$db === null) {self::$db = self::Open();}
         return esql_select($table, $options);
+    }
+
+    public static function SelectFirstRow($table, $options=array()) {
+        if(self::$db === null) {self::$db = self::Open();}
+
+        $options['limit'] = 1;
+        $data = esql_select($table, $options);
+        return ($data != false)? $data[0] : false;
+    }
+
+    public static function SelectFirstField($table, $options=array()) {
+        $row = self::SelectFirstRow($table, $options);
+        return ($row != false)? current($row) : false;
     }
 
     public static function Insert($table, $values) {
@@ -100,10 +125,10 @@ function esql_close()
 function esql_select($table, $options=array())
 {
 
-    $column_list = $options['column_list'];
-    $where_obj = $options['where'];
-    $order_by = $options['order_by'];
-    $limit = $options['limit']? $options['limit'] : 100;
+    $column_list = isset($options['column_list'])? $options['column_list'] : null;
+    $where_obj = isset($options['where'])? $options['where'] : null;
+    $order_by = isset($options['order_by'])? $options['order_by'] : null;
+    $limit = isset($options['limit'])? $options['limit'] : 1000;
 
     $table = mysql_real_escape_string($table);
     $where_str = esql_build_where($where_obj);
