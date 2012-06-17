@@ -10,7 +10,8 @@
 
 
 $app->get('/', function() use ($app) {
-	$app->render('home.twig');
+	$url_root = ($_SERVER['SERVER_NAME'] == 'localhost')? 'localhost/redditstream' : 'reddit-stream.com';
+	$app->render('home.twig', array('url_root'=>$url_root));
 });
 
 $app->get('/r/:subreddit/comments/:id/', function($subreddit, $id) use ($app) {
