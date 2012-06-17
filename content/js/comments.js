@@ -10,7 +10,6 @@ var Ui = {
 
 		this.load_cookies();
 		this.load_votes();
-
 	},
 
 	load_cookies: function() {
@@ -269,6 +268,13 @@ var Ui = {
 
 	vote: function(id, name, direction) {
 
+		if(this.modhash == null) {
+			// user is not logged in. Can't vote until that happens, so
+			// show the login dialog
+			this.show_login();
+			return;
+		}
+
 		var comment_element = $('c-' + id);
 		var upvote_link = comment_element.getElement('.uv-link');
 		var downvote_link = comment_element.getElement('.dv-link');
@@ -345,6 +351,7 @@ var Ui = {
 		$('ld-submit').disabled = false;
 
 		$('login-dialog').show();
+		$('ld-username').focus();
 	},
 
 	start_login: function() {
