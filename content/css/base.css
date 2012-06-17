@@ -160,3 +160,52 @@
 .dv-link {background-position: -31px -612px; margin-top: 2px;}
 .uv-link.has-voted {background-position: -79px -612px;}
 .dv-link.has-voted {background-position: -47px -612px;}
+
+/* login window */
+
+#login-dialog {
+	position: fixed;
+
+	left: 50%;
+	top: 30%;
+	width: 250px;
+
+	padding: 12px;
+
+	margin-left: -150px;
+
+	background: white;
+	border: 2px solid black;
+
+	z-index: 3;
+
+}
+
+#login-dialog input[type=text], #login-dialog input[type=password] {
+	width: 90%;
+}
+
+#login-dialog input {
+	font-size: 14pt;
+	padding: 3px;
+}
+
+#ld-buttons {
+	margin-top: 6px;
+}
+
+#ld-inputs {
+	margin-top: 6px;
+}
+
+#login-dialog div.error-text {
+	margin-top: 6px;
+	font-size: 9pt;
+	color: red;
+}
+
+#login-dialog div.info-text {
+	margin-top: 6px;
+	font-size: 9pt;
+	color: gray;
+}

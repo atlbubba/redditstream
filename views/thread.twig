@@ -66,6 +66,27 @@
 	<div id='main-loading'>loading...</div>
 </div>
 
+<div id='login-dialog' >
+	<form onsubmit='Ui.start_login.bind(Ui)(); return false;'>
+		<div>
+			<div><b>Login Required</b></div>
+
+			<div id='ld-inputs'>
+				<div><input id='ld-username' type='text' placeholder='reddit username'/></div>
+				<div><input id='ld-password' type='password' placeholder='password'/></div>
+			</div>
+
+			<div id='ld-error' class='error-text'></div>
+
+			<div class='info-text'><b>Important:</b> Your password is passed directly to reddit.com, it is not stored on the reddit-stream servers at all</div>
+		</div>
+		<div id='ld-buttons'>
+			<input id='ld-submit' type='submit' value='login'>
+			<input type='button' value='cancel' onclick='$("login-dialog").hide()'>
+		</div>
+	</form>
+</div>
+
 <script type="text/javascript">
 
   var _gaq = _gaq || [];

@@ -11,10 +11,6 @@ var Ui = {
 		this.load_cookies();
 		this.load_votes();
 
-		if(this.modhash == null) {
-			this.login('njr123', '');
-		}
-
 	},
 
 	load_cookies: function() {
@@ -252,12 +248,17 @@ var Ui = {
 			'url': 'http://www.reddit.com/api/login/' + username,
 			'onSuccess': function(response) {
 				if(response.json.errors.length != 0) {
-					alert(response.json.errors[0][1]);
+					$('ld-error').innerHTML = response.json.errors[0][1];
 				} else {
 					this.modhash = response.json.data.modhash;
 					Cookie.write('reddit_session', response.json.data.cookie, {duration: 14});
 					Cookie.write('reddit_modhash', response.json.data.modhash, {duration: 14});
+
+					$('login-dialog').hide();
 				}
+
+				$('ld-submit').disabled = false;
+				$('ld-submit').value = 'login';
 			}.bind(this)
 		}).post({
 			'user': username,
@@ -333,6 +334,28 @@ var Ui = {
 		var e = comment_element.getElement('.c-points');
 		var points = e.innerHTML.replace('(', '').toInt();
 		e.innerHTML = '(' + this.format_points(points + change) + ')';
+	},
+
+	show_login: function() {
+		$('ld-username').value = '';
+		$('ld-password').value = '';
+		$('ld-error').value = '';
+
+		$('ld-submit').value = 'login';
+		$('ld-submit').disabled = false;
+
+		$('login-dialog').show();
+	},
+
+	start_login: function() {
+		var username = $('ld-username').value.trim();
+		var password = $('ld-password').value.trim();
+
+		if(username != '' && password != '') {
+			$('ld-submit').disabled = true;
+			$('ld-submit').value = 'loading...';
+			this.login(username, password);
+		}
 	}
 }
 

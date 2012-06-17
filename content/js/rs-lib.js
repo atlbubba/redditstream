@@ -1,5 +1,9 @@
 
-
+// this is now implemented in mootool.more (finally!)
+Element.implement({
+   show: function() {this.setStyle('display','');},
+   hide: function() {this.setStyle('display','none');}
+});
 
 String.implement({
 	decodeEntities: (function() {
