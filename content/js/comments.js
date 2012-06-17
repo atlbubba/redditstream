@@ -86,7 +86,9 @@ var Ui = {
 	},
 
 	set_post_info: function(post_info) {
-		$('post-info').innerHTML = post_info.data.selftext_html.decodeEntities();
+		if(post_info.data.selftext_html != null) {
+			$('post-info').innerHTML = post_info.data.selftext_html.decodeEntities();
+		}
 	},
 
 	set_page_info: function(post_info) {
