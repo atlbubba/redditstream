@@ -268,13 +268,37 @@ var Ui = {
 
 	vote: function(id, name, direction) {
 
+		var comment_element = $('c-' + id);
+		var upvote_link = comment_element.getElement('.uv-link');
+		var downvote_link = comment_element.getElement('.dv-link');
+		var change = direction; // how much will the total vote count change?
+
 		if(direction == 1 && this.upvoted.indexOf(id) != -1) {
 			direction = 0;
+			change = -1;
+		} else if(direction == -1 && this.downvoted.indexOf(id) != -1) {
+			direction = 0;
+			change = 1;
 		}
 
-		if(direction == -1 && this.downvoted.indexOf(id) != -1) {
-			direction = 0;
+		if(direction == 1) {
+			this.upvoted.push(id);
+			this.downvoted.erase(id);
+			upvote_link.addClass('has-voted');
+			downvote_link.removeClass('has-voted');
+		} else if(direction == -1) {
+			this.upvoted.erase(id);
+			this.downvoted.push(id);
+			upvote_link.removeClass('has-voted');
+			downvote_link.addClass('has-voted');
+		} else {
+			this.downvoted.erase(id);
+			this.upvoted.erase(id);
+			upvote_link.removeClass('has-voted');
+			downvote_link.removeClass('has-voted');
 		}
+
+		this.update_vote_count(comment_element, change);
 
 		var req = new ProxiedRequest({
 			'url': 'http://www.reddit.com/api/vote',
@@ -282,24 +306,6 @@ var Ui = {
 				if(JSON.encode(response) != JSON.encode({})) {
 					alert('Error: Could not save vote');
 				} else {
-
-					if(direction == 1) {
-						this.upvoted.push(id);
-						this.downvoted.erase(id);
-						$('c-' + id).getElement('.uv-link').addClass('has-voted');
-						$('c-' + id).getElement('.dv-link').removeClass('has-voted');
-					} else if(direction == -1) {
-						this.upvoted.erase(id);
-						this.downvoted.push(id);
-						$('c-' + id).getElement('.uv-link').removeClass('has-voted');
-						$('c-' + id).getElement('.dv-link').addClass('has-voted');
-					} else {
-						this.downvoted.erase(id);
-						this.upvoted.erase(id);
-						$('c-' + id).getElement('.uv-link').removeClass('has-voted');
-						$('c-' + id).getElement('.dv-link').removeClass('has-voted');
-					}
-
 					this.save_votes();
 				}
 			}.bind(this)
@@ -320,6 +326,13 @@ var Ui = {
 	load_votes: function() {
 		this.upvoted = JSON.decode(Cookie.read(_thread_id+'-uv') || '[]');
 		this.downvoted = JSON.decode(Cookie.read(_thread_id+'-dv') || '[]');
+	},
+
+	update_vote_count: function(comment_element, change) {
+		comment_element = $(comment_element);
+		var e = comment_element.getElement('.c-points');
+		var points = e.innerHTML.replace('(', '').toInt();
+		e.innerHTML = '(' + this.format_points(points + change) + ')';
 	}
 }
 
