@@ -56,7 +56,7 @@ class UsageCount {
 class CountPeriod {
 	static function OpenNew() {
 		ESQL::Query('update usage_period set end_date = NOW() where end_date is null');
-		ESQL::Query('insert into usage_period(start_date) values(NOW())');
+		return ESQL::Query('insert into usage_period(start_date) values(NOW())');
 	}
 
 	static function GetCurrentId() {
