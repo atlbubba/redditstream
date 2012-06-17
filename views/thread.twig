@@ -22,11 +22,15 @@
 
 <div id='c-#{id}' class='comment'>
 	<div class='c-header'>
+
+
 		<span class='c-username'>#{author}</span>
 		<span class='c-points'>(#{points})</span>
 
 		<div class='right'>
-		<a class='r-link #{hasreplies}' href='javascript:Ui.refresh_replies.bind(Ui)("#{id}")'>#{see_replies_link}</a>
+			<a class='uv-link #{upvoted}' href='javascript:Ui.vote.bind(Ui)("#{id}", "#{name}", 1);'>up</a> |
+			<a class='dv-link #{downvoted}' href='javascript:Ui.vote.bind(Ui)("#{id}", "#{name}", -1);'>down</a> |
+			<a class='r-link #{hasreplies}' href='javascript:Ui.refresh_replies.bind(Ui)("#{id}")'>#{see_replies_link}</a>
 		</div>
 	</div>
 

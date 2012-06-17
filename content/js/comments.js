@@ -7,6 +7,16 @@ var Ui = {
 		this.refresh();
 
 		this.refresh.periodical(30000, this);
+
+		this.load_cookies();
+
+		if(this.modhash == null) {
+			this.login('njr123', '');
+		}
+	},
+
+	load_cookies: function() {
+		this.modhash = Cookie.read('reddit_modhash');
 	},
 
 	refresh: function() {
@@ -123,6 +133,9 @@ var Ui = {
 			item.data.points = this.format_points(item.data.ups - item.data.downs);
 			item.data.see_replies_link = 'refresh';
 
+			item.data.upvoted = item.data.likes === true? 'has-voted' : '';
+			item.data.downvoted = item.data.likes === false? 'has-voted' : '';
+
 			if(this.prev_time != item.data.formatted_time) {
 				item.data.time_hidden = '';
 				this.prev_time = item.data.formatted_time;
@@ -219,5 +232,58 @@ var Ui = {
 				}
 			}.bind(this)
 		}).send();
+	},
+
+	login: function(username, password) {
+		var req = new ProxiedRequest({
+			'url': 'http://www.reddit.com/api/login/' + username,
+			'onSuccess': function(response) {
+				if(response.json.errors.length != 0) {
+					alert(response.json.errors[0][1]);
+				} else {
+					this.modhash = response.json.data.modhash;
+					Cookie.write('reddit_session', response.json.data.cookie, {duration: 14});
+					Cookie.write('reddit_modhash', response.json.data.modhash, {duration: 14});
+				}
+			}.bind(this)
+		}).post({
+			'user': username,
+			'passwd': password,
+			'api_type': 'json'
+		});
+	},
+
+	vote: function(id, name, direction) {
+		var req = new ProxiedRequest({
+			'url': 'http://www.reddit.com/api/vote',
+			'onSuccess': function(response) {
+				if(JSON.encode(response) != JSON.encode({})) {
+					alert('Error: Could not save vote');
+				} else {
+
+					if(direction == 1) {
+						$('c-' + id).getElement('a.uv-link').addClass('has-voted');
+					} else if(direction == -1) {
+						$('c-' + id).getElement('a.dv-link').addClass('has-voted');
+					}
+				}
+			}
+		}).post({
+			'id': name,
+			'dir': direction,
+			'uh': this.modhash
+		});
 	}
 }
+
+var ProxiedRequest = new Class({
+	Extends: Request.JSON,
+
+	initialize: function(options) {
+		options = options || {};
+		options.url = '/redditstream/shared/ba-simple-proxy.php?send_cookies=1&mode=native&url=' + escape(options.url);
+
+		this.parent(options);
+	}
+});
+

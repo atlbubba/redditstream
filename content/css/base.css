@@ -145,3 +145,8 @@
 	padding-left: 8px;
 	border-left: 1px solid #ddd;
 }
+
+/* comment voting */
+.has-voted {
+	background-color: yellow;
+}
