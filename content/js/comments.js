@@ -66,11 +66,11 @@ var Ui = {
 
 	set_votes: function() {
 		this.upvoted.each(function(comment_id) {
-			$('c-'+comment_id).getElement('a.uv-link').addClass('has-voted');
+			$('c-'+comment_id).getElement('.uv-link').addClass('has-voted');
 		});
 
 		this.downvoted.each(function(comment_id) {
-			$('c-'+comment_id).getElement('a.dv-link').addClass('has-voted');
+			$('c-'+comment_id).getElement('.dv-link').addClass('has-voted');
 		});
 	},
 
@@ -286,18 +286,18 @@ var Ui = {
 					if(direction == 1) {
 						this.upvoted.push(id);
 						this.downvoted.erase(id);
-						$('c-' + id).getElement('a.uv-link').addClass('has-voted');
-						$('c-' + id).getElement('a.dv-link').removeClass('has-voted');
+						$('c-' + id).getElement('.uv-link').addClass('has-voted');
+						$('c-' + id).getElement('.dv-link').removeClass('has-voted');
 					} else if(direction == -1) {
 						this.upvoted.erase(id);
 						this.downvoted.push(id);
-						$('c-' + id).getElement('a.uv-link').removeClass('has-voted');
-						$('c-' + id).getElement('a.dv-link').addClass('has-voted');
+						$('c-' + id).getElement('.uv-link').removeClass('has-voted');
+						$('c-' + id).getElement('.dv-link').addClass('has-voted');
 					} else {
 						this.downvoted.erase(id);
 						this.upvoted.erase(id);
-						$('c-' + id).getElement('a.uv-link').removeClass('has-voted');
-						$('c-' + id).getElement('a.dv-link').removeClass('has-voted');
+						$('c-' + id).getElement('.uv-link').removeClass('has-voted');
+						$('c-' + id).getElement('.dv-link').removeClass('has-voted');
 					}
 
 					this.save_votes();

@@ -135,7 +135,7 @@
 }
 
 .c-replies .comment {
-	padding-left: 8px;
+	padding-left: 26px;
 	border-left: 1px solid #ddd;
 }
 
@@ -147,6 +147,16 @@
 }
 
 /* comment voting */
-.has-voted {
-	background-color: yellow;
+
+.v-link {
+	height: 14px;
+	width: 15px;
+	background-image: url(../imgs/vote-arrows.png);
+	background-repeat: no-repeat;
+	cursor: pointer;
 }
+
+.uv-link {background-position: -63px -612px;}
+.dv-link {background-position: -31px -612px; margin-top: 2px;}
+.uv-link.has-voted {background-position: -79px -612px;}
+.dv-link.has-voted {background-position: -47px -612px;}
