@@ -9,10 +9,12 @@ var Ui = {
 		this.refresh.periodical(30000, this);
 
 		this.load_cookies();
+		this.load_votes();
 
 		if(this.modhash == null) {
 			this.login('njr123', '');
 		}
+
 	},
 
 	load_cookies: function() {
@@ -46,6 +48,7 @@ var Ui = {
 
 				if(this.first_load) {
 					this.set_page_info(post_info);
+					this.set_votes();
 					this.first_load = false;
 				}
 
@@ -59,6 +62,16 @@ var Ui = {
 
 			}.bind(this)
 		}).send();
+	},
+
+	set_votes: function() {
+		this.upvoted.each(function(comment_id) {
+			$('c-'+comment_id).getElement('a.uv-link').addClass('has-voted');
+		});
+
+		this.downvoted.each(function(comment_id) {
+			$('c-'+comment_id).getElement('a.dv-link').addClass('has-voted');
+		});
 	},
 
 	is_at_bottom: function() {
@@ -254,6 +267,15 @@ var Ui = {
 	},
 
 	vote: function(id, name, direction) {
+
+		if(direction == 1 && this.upvoted.indexOf(id) != -1) {
+			direction = 0;
+		}
+
+		if(direction == -1 && this.downvoted.indexOf(id) != -1) {
+			direction = 0;
+		}
+
 		var req = new ProxiedRequest({
 			'url': 'http://www.reddit.com/api/vote',
 			'onSuccess': function(response) {
@@ -262,17 +284,42 @@ var Ui = {
 				} else {
 
 					if(direction == 1) {
+						this.upvoted.push(id);
+						this.downvoted.erase(id);
 						$('c-' + id).getElement('a.uv-link').addClass('has-voted');
+						$('c-' + id).getElement('a.dv-link').removeClass('has-voted');
 					} else if(direction == -1) {
+						this.upvoted.erase(id);
+						this.downvoted.push(id);
+						$('c-' + id).getElement('a.uv-link').removeClass('has-voted');
 						$('c-' + id).getElement('a.dv-link').addClass('has-voted');
+					} else {
+						this.downvoted.erase(id);
+						this.upvoted.erase(id);
+						$('c-' + id).getElement('a.uv-link').removeClass('has-voted');
+						$('c-' + id).getElement('a.dv-link').removeClass('has-voted');
 					}
+
+					this.save_votes();
 				}
-			}
+			}.bind(this)
 		}).post({
 			'id': name,
 			'dir': direction,
 			'uh': this.modhash
 		});
+	},
+
+	save_votes: function() {
+		if(this.upvoted != null && this.downvoted != null) {
+			Cookie.write(_thread_id+'-uv', JSON.encode(this.upvoted), {duration: 14});
+			Cookie.write(_thread_id+'-dv', JSON.encode(this.downvoted), {duration: 14});
+		}
+	},
+
+	load_votes: function() {
+		this.upvoted = JSON.decode(Cookie.read(_thread_id+'-uv') || '[]');
+		this.downvoted = JSON.decode(Cookie.read(_thread_id+'-dv') || '[]');
 	}
 }
 
