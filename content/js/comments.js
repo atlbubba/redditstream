@@ -434,6 +434,12 @@ var CommentElement = new Class({
 		var jst = new JsTemplate(this.options.template);
 		var e = jst.render(this.data);
 
+		if(this.data.has_image) {
+			e.addClass('has-image');
+			this.body_element = e.getElement('.c-body');
+			this.body_element.addEvent('click', this.toggleImage.bind(this));
+		}
+
 		if(!this.options.first_load) {
 			// not the first element? then fade it in
 			e.style.opacity = '0';
@@ -468,6 +474,16 @@ var CommentElement = new Class({
 			// so just flag the refresh link and move on
 			this.data.hasreplies = 'has-replies';
 			this.data.see_replies_link = 'load replies (' + this.data.replies.data.children.length + ')';
+		}
+
+		var image_regex = /\[.+\]\((http:.+\.(png|jpg|gif))\)/i;
+		var match = image_regex.exec(this.data.body);
+		if(match != null) {
+			this.image_visible = false;
+			this.data.has_image = true;
+			this.data.image_url = match[1];
+		} else {
+			this.data.has_image = false;
 		}
 	},
 
@@ -521,6 +537,30 @@ var CommentElement = new Class({
 		} else {
 			return count + ' points';
 		}
+	},
+
+	toggleImage: function() {
+
+		if(!$defined(this.image_element)) {
+
+			this.image_element = $e('div.c-image', [
+				$e('a', {
+					'href':this.data.image_url,
+					'children': [$e('img', {'src':this.data.image_url})]
+				})
+			]);
+
+			this.image_element.inject(this.body_element);
+		}
+
+		if(this.image_visible == false) {
+			this.image_element.show();
+			this.image_visible = true;
+		} else {
+			this.image_element.hide();
+			this.image_visible = false;
+		}
+
 	}
 
 });

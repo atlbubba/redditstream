@@ -122,6 +122,11 @@
 	margin-top: 12px;
 }
 
+.comment.has-image .c-body:hover {
+	cursor: pointer;
+	background: #ddd;
+}
+
 /* comment header */
 .comment .c-header {
 	font-size: 10pt;
@@ -159,6 +164,12 @@
 	margin-top: 4px;
 }
 
+.c-body .c-image {
+	margin-top: 12px;
+	padding-top: 12px;
+	border-top: 1px solid #ccc;
+}
+
 .c-time {
 	font-size: 9pt;
 	border: 1px solid #ccc;
@@ -169,6 +180,11 @@
 
 .c-body div.hidden {
 	display:none;
+}
+
+.c-body .c-image img {
+	max-width: 100%;
+	max-height: 800px;
 }
 
 /* comment replies */
