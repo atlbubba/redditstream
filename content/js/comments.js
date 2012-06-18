@@ -393,6 +393,16 @@ var Ui = {
 			$('ld-submit').value = 'loading...';
 			this.login(username, password);
 		}
+	},
+
+	change_layout: function() {
+		$('sidebar').toggleClass('on-top');
+
+		if($('sidebar').hasClass('on-top')) {
+			$('pi-layoutlink').innerHTML = 'change to multi-column mode';
+		} else {
+			$('pi-layoutlink').innerHTML = 'change to single-column mode';
+		}
 	}
 }
 

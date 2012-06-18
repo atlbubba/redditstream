@@ -16,6 +16,12 @@
 	height: 100%;
 }
 
+#sidebar.on-top {
+	margin-left: 48px;
+	width: 55%;
+	position: static !important;
+}
+
 /* sidebar - login stuff */
 #user-bar {
 	text-align: right;
@@ -92,12 +98,18 @@
 }
 
 /* side bar - page info footer thing */
-#page-info {
+
+#page-info, #page-options  {
 	font-size: 9pt;
 	color: gray;
-	padding: 8px;
 	text-align: right;
+	margin-top: 8px;
+	padding: 0 8px;
 	margin-right: 4px;
+}
+
+#page-options {
+	margin-top: 2px;
 }
 
 /* main body */

@@ -53,14 +53,17 @@
 
 <div id='sidebar'>
 	<div id='user-bar' class='out'>
-		<div id='ub-login'>
-			<a href='javascript:Ui.show_login.bind(Ui)()'>login</a>
-		</div>
 
-		<div id='ub-logout'>
+		<a id='pi-layoutlink' href='javascript:Ui.change_layout.bind(Ui)()'>single column mode</a> |
+
+		<span id='ub-login'>
+			<a href='javascript:Ui.show_login.bind(Ui)()'>login</a>
+		</span>
+
+		<span id='ub-logout'>
 			<a id='ub-username' href='javascript:void(0)'>username</a> |
 			<a id='ub-logout' href='javascript:Ui.logout.bind(Ui)()'>logout</a>
-		</div>
+		</span>
 	</div>
 
 	<div id='post-title'></div>
@@ -70,6 +73,7 @@
 		posted in <a id='ps-subreddit'></a>
 	</div>
 	<div id='post-info' class='expanded'></div>
+
 	<div id='page-info'>
 		<p>Nathan Reed (c) 2012 | <a href='http://twitter.com/reednj'>@reednj</a></p>
 		<p><a href='http://reddit-stream.com/'>reddit-stream.com</a> | v1.0</p>
