@@ -10,8 +10,13 @@
 
 
 $app->get('/', function() use ($app) {
+	$top_links = UsageCount::GetCurrentTop();
 	$url_root = ($_SERVER['SERVER_NAME'] == 'localhost')? 'localhost/redditstream' : 'reddit-stream.com';
-	$app->render('home.twig', array('url_root'=>$url_root));
+
+	$app->render('home.twig', array(
+		'url_root'=> $url_root,
+		'top_links'=> $top_links
+	));
 });
 
 $app->get('/r/:subreddit/comments/:id/', function($subreddit, $id) use ($app) {

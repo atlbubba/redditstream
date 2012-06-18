@@ -59,8 +59,17 @@ class UsageCount {
 		return time() - strtotime($start_date);
 	}
 
-	static function GetCurrentTop() {
-		return null;
+	static function GetCurrentTop($count=5) {
+		return ESQL::Query("select
+				u.thread_id,
+				pf.title,
+				sum(view_count) as views
+			from page_usage u
+				inner join page_info pf on pf.thread_id = u.thread_id
+			where period_id > (select max(period_id) from usage_period) - 3
+			group by thread_id
+			order by views desc
+			limit $count");
 	}
 }
 
