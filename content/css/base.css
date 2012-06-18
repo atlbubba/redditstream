@@ -182,6 +182,7 @@
 }
 
 #login-dialog input[type=text], #login-dialog input[type=password] {
+	margin-top: 3px;
 	width: 90%;
 }
 
