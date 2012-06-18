@@ -99,7 +99,7 @@
 
 /* side bar - page info footer thing */
 
-#page-info, #page-options  {
+#page-info  {
 	font-size: 9pt;
 	color: gray;
 	text-align: right;
@@ -108,9 +108,6 @@
 	margin-right: 4px;
 }
 
-#page-options {
-	margin-top: 2px;
-}
 
 /* main body */
 
@@ -130,8 +127,9 @@
 	font-size: 10pt;
 }
 
-.c-header .c-username {
+.c-header a.c-username {
 	font-weight: bold;
+	color: black;
 }
 
 .c-header a.r-link {
