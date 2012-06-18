@@ -244,45 +244,48 @@ var Ui = {
 			return;
 		}
 
-		var comment_element = $('c-' + id);
-		var upvote_link = comment_element.getElement('.uv-link');
-		var downvote_link = comment_element.getElement('.dv-link');
-		var change = direction; // how much will the total vote count change?
+		var ce = this.comment_elements[id];
 
-		if(direction == 1 && this.upvoted.indexOf(id) != -1) {
-			// removing upvote
-			direction = 0;
-			change = -1;
-		} else if(direction == -1 && this.downvoted.indexOf(id) != -1) {
-			// removing downvote
-			direction = 0;
-			change = 1;
-		} else if(direction == 1 && this.downvoted.indexOf(id) != -1) {
-			// downvote -> upvote
-			change = 2;
-		} else if(direction == -1 && this.upvoted.indexOf(id) != -1) {
-			// upvote -> downvote
-			change = -2;
+		// how much will the total vote count change?
+		var change = null;
+		var cur_vote = null;
+		var new_vote = null;
+
+		if(this.upvoted.indexOf(id) != -1) {
+			cur_vote = 1;
+		} else if(this.downvoted.indexOf(id) != -1) {
+			cur_vote = -1;
+		} else {
+			cur_vote = 0;
 		}
 
-		if(direction == 1) {
+		if(direction == cur_vote) {
+			// reversing the current vote
+			new_vote = 0;
+			change = -cur_vote;
+		} else if(direction == -cur_vote) {
+			// invert the vote. ie downvote -> upvote and v.v.
+			new_vote = direction;
+			change = 2 * direction;
+		} else {
+			// there are no existing votes. this is the simplest case
+			new_vote = direction;
+			change = direction;
+		}
+
+		if(new_vote == 1) {
 			this.upvoted.push(id);
 			this.downvoted.erase(id);
-			upvote_link.addClass('has-voted');
-			downvote_link.removeClass('has-voted');
-		} else if(direction == -1) {
+		} else if(new_vote == -1) {
 			this.upvoted.erase(id);
 			this.downvoted.push(id);
-			upvote_link.removeClass('has-voted');
-			downvote_link.addClass('has-voted');
 		} else {
 			this.downvoted.erase(id);
 			this.upvoted.erase(id);
-			upvote_link.removeClass('has-voted');
-			downvote_link.removeClass('has-voted');
 		}
 
-		this.comment_elements[id].updateVote(change);
+		ce.updateVoteButtons(new_vote);
+		ce.updateVote(change);
 
 		var req = new ProxiedRequest({
 			'url': 'http://www.reddit.com/api/vote',
@@ -311,7 +314,6 @@ var Ui = {
 		this.upvoted = JSON.decode(Cookie.read(_thread_id+'-uv') || '[]');
 		this.downvoted = JSON.decode(Cookie.read(_thread_id+'-dv') || '[]');
 	},
-
 
 	show_login: function() {
 		$('ld-username').value = '';
@@ -365,6 +367,9 @@ var CommentElement = new Class({
 			e.style.opacity = '0';
 			e.fade();
 		}
+
+		this.upvote_link = e.getElement('.uv-link');
+		this.downvote_link = e.getElement('.dv-link');
 
 		return e;
 	},
@@ -423,6 +428,19 @@ var CommentElement = new Class({
 		var e = this.element.getElement('.c-points');
 		this.data.karma += change;
 		e.innerHTML = '(' + this.format_points(this.data.karma) + ')';
+	},
+
+	updateVoteButtons: function(new_vote) {
+		if(new_vote == 1) {
+			this.upvote_link.addClass('has-voted');
+			this.downvote_link.removeClass('has-voted');
+		} else if(new_vote == -1) {
+			this.upvote_link.removeClass('has-voted');
+			this.downvote_link.addClass('has-voted');
+		} else {
+			this.upvote_link.removeClass('has-voted');
+			this.downvote_link.removeClass('has-voted');
+		}
 	},
 
 	format_points: function(count) {
