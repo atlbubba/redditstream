@@ -250,11 +250,19 @@ var Ui = {
 		var change = direction; // how much will the total vote count change?
 
 		if(direction == 1 && this.upvoted.indexOf(id) != -1) {
+			// removing upvote
 			direction = 0;
 			change = -1;
 		} else if(direction == -1 && this.downvoted.indexOf(id) != -1) {
+			// removing downvote
 			direction = 0;
 			change = 1;
+		} else if(direction == 1 && this.downvoted.indexOf(id) != -1) {
+			// downvote -> upvote
+			change = 2;
+		} else if(direction == -1 && this.upvoted.indexOf(id) != -1) {
+			// upvote -> downvote
+			change = -2;
 		}
 
 		if(direction == 1) {
@@ -274,7 +282,7 @@ var Ui = {
 			downvote_link.removeClass('has-voted');
 		}
 
-		this.update_vote_count(comment_element, change);
+		this.comment_elements[id].updateVote(change);
 
 		var req = new ProxiedRequest({
 			'url': 'http://www.reddit.com/api/vote',
@@ -304,12 +312,6 @@ var Ui = {
 		this.downvoted = JSON.decode(Cookie.read(_thread_id+'-dv') || '[]');
 	},
 
-	update_vote_count: function(comment_element, change) {
-		comment_element = $(comment_element);
-		var e = comment_element.getElement('.c-points');
-		var points = e.innerHTML.replace('(', '').toInt();
-		e.innerHTML = '(' + this.format_points(points + change) + ')';
-	},
 
 	show_login: function() {
 		$('ld-username').value = '';
@@ -373,7 +375,8 @@ var CommentElement = new Class({
 		this.data.created_utc_date = new Date(this.data.created_utc * 1000);
 		this.data.formatted_time = this.data.created_utc_date.format('%X');
 		this.data.time_hidden = 'hidden';
-		this.data.points = Ui.format_points(this.data.ups - this.data.downs);
+		this.data.karma = this.data.ups - this.data.downs;
+		this.data.points = Ui.format_points(this.data.karma);
 		this.data.see_replies_link = 'refresh';
 
 		this.data.upvoted = this.data.likes === true? 'has-voted' : '';
@@ -393,12 +396,18 @@ var CommentElement = new Class({
 
 	updateData: function(new_data) {
 
-		this.element.getElement('.c-points').innerHTML = '(' + Ui.format_points(new_data.ups - new_data.downs) + ')';
+		new_data.karma = new_data.ups - new_data.downs;
+		this.element.getElement('.c-points').innerHTML = '(' + Ui.format_points(new_data.karma) + ')';
 
 		if(new_data.replies != null && new_data.replies != '') {
+
 			// if we  have new replies, then update the count on the page
-			var cur_reply_count = this.data.replies.data.children.length;
 			var new_reply_count = new_data.replies.data.children.length;
+			var cur_reply_count = 0;
+
+			if(this.data.replies != '') {
+				cur_reply_count = this.data.replies.data.children.length;
+			}
 
 			if(cur_reply_count != new_reply_count) {
 				var refresh_link = this.element.getElement('.r-link');
@@ -408,6 +417,12 @@ var CommentElement = new Class({
 		}
 
 		this.data = new_data;
+	},
+
+	updateVote: function(change) {
+		var e = this.element.getElement('.c-points');
+		this.data.karma += change;
+		e.innerHTML = '(' + Ui.format_points(this.data.karma) + ')';
 	}
 
 });
