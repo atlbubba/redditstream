@@ -143,6 +143,10 @@ var Ui = {
 		} else {
 			$('post-info').hide();
 		}
+
+		// set this in here, instead of in page_info, so that it updates as the
+		// thread refreshs
+		$('ps-count').innerHTML = post_info.data.num_comments;
 	},
 
 	set_page_info: function(post_info) {
@@ -155,7 +159,7 @@ var Ui = {
 		$('ps-author').innerHTML = post_info.data.author;
 		$('ps-author').href = 'http://www.reddit.com/user/' + post_info.data.author;
 
-		$('ps-count').innerHTML = post_info.data.num_comments;
+
 		$('ps-count').href = 'http://www.reddit.com' + post_info.data.permalink;
 
 		$('ps-subreddit').innerHTML = '/r/' + post_info.data.subreddit;
