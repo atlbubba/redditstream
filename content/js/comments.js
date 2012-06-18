@@ -139,6 +139,8 @@ var Ui = {
 	set_post_info: function(post_info) {
 		if(post_info.data.selftext_html != null) {
 			$('post-info').innerHTML = post_info.data.selftext_html.decodeEntities();
+		} else {
+			$('post-info').hide();
 		}
 	},
 
