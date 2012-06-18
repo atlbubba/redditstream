@@ -10,6 +10,8 @@ var Ui = {
 
 		this.load_cookies();
 		this.load_votes();
+
+		this.comment_elements = {};
 	},
 
 	load_cookies: function() {
@@ -135,8 +137,7 @@ var Ui = {
 			}
 
 
-
-			var c = new CommentElement(
+			this.comment_elements[item.data.id] = new CommentElement(
 				insert_into,
 				item.data, {
 					'first_load': this.first_load,
@@ -162,23 +163,12 @@ var Ui = {
 				continue;
 			}
 
-			var karma = comment.data.ups - comment.data.downs;
-			elem.getElement('.c-points').innerHTML = '(' + this.format_points(karma) + ')';
+			this.comment_elements[comment.data.id].updateData(comment.data);
 
 			if(comment.data.replies != null && comment.data.replies != '') {
-
-				// if we  have new replies, then update the count on the page
-				var cur_reply_count = elem.getElement('.c-replies').getChildren().length;
-				var new_reply_count = comment.data.replies.data.children.length;
-
-				if(cur_reply_count != new_reply_count) {
-					var refresh_link = elem.getElement('.r-link');
-					refresh_link.innerHTML = 'load replies (' + new_reply_count + ')';
-					refresh_link.addClass('has-replies');
-				}
-
 				// be sure to update all the replies as well
-				this.refresh_comments(comment.data.replies.data.children, new_reply_count);
+				var replies = comment.data.replies.data.children;
+				this.refresh_comments(replies, replies.length);
 			}
 		}
 	},
@@ -346,19 +336,21 @@ var Ui = {
 }
 
 var CommentElement = new Class({
+
 	initialize: function(container, data, options) {
 		this.container = $(container);
 		this.data = data;
 		this.options = options || {};
 		this.options.template = this.options.template || 'tmpl-comment';
 		this.options.is_root = $defined(this.options.is_root)? this.options.is_root : true;
+		this.options.prev_time = this.options.last_time || null;
 
 		if(!$defined(container) || !$defined(data)) {
 			throw 'Must define a container element and pass in data';
 		}
 
 		this.normalizeData();
-		this.createElement().inject(this.container);
+		this.element = this.createElement().inject(this.container);
 	},
 
 	createElement: function() {
@@ -387,9 +379,8 @@ var CommentElement = new Class({
 		this.data.upvoted = this.data.likes === true? 'has-voted' : '';
 		this.data.downvoted = this.data.likes === false? 'has-voted' : '';
 
-		if(this.prev_time != this.data.formatted_time) {
+		if(this.options.prev_time != this.data.formatted_time) {
 			this.data.time_hidden = '';
-			this.prev_time = this.data.formatted_time;
 		}
 
 		if(!this.options.is_root && this.data.replies != '' && this.data.replies != null) {
@@ -398,6 +389,25 @@ var CommentElement = new Class({
 			this.data.hasreplies = 'has-replies';
 			this.data.see_replies_link = 'load replies (' + this.data.replies.data.children.length + ')';
 		}
+	},
+
+	updateData: function(new_data) {
+
+		this.element.getElement('.c-points').innerHTML = '(' + Ui.format_points(new_data.ups - new_data.downs) + ')';
+
+		if(new_data.replies != null && new_data.replies != '') {
+			// if we  have new replies, then update the count on the page
+			var cur_reply_count = this.data.replies.data.children.length;
+			var new_reply_count = new_data.replies.data.children.length;
+
+			if(cur_reply_count != new_reply_count) {
+				var refresh_link = this.element.getElement('.r-link');
+				refresh_link.innerHTML = 'load replies (' + new_reply_count + ')';
+				refresh_link.addClass('has-replies');
+			}
+		}
+
+		this.data = new_data;
 	}
 
 });
