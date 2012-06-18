@@ -57,6 +57,7 @@ var Ui = {
 				if(this.first_load) {
 					this.set_page_info(post_info);
 					this.set_votes();
+					this.report_stats(post_info.data.title);
 					this.first_load = false;
 				}
 
@@ -403,6 +404,10 @@ var Ui = {
 		} else {
 			$('pi-layoutlink').innerHTML = 'change to single-column mode';
 		}
+	},
+
+	report_stats: function(title) {
+		new Request.JSON({'url': _fs_root + '/stats/increment/' + _thread_id + '/'}).post({'title': title});
 	}
 }
 

@@ -2,6 +2,15 @@
 
 require_once 'shared/esql.inc.php';
 
+class PageInfo {
+	static function Insert($thread_id, $title) {
+		return ESQL::Insert('page_info', array(
+			'thread_id' => $thread_id,
+			'title'=>$title
+		));
+	}
+}
+
 class UsageCount {
 	static function Insert($thread_id, $period_id) {
 		ESQL::Insert('page_usage', array(
@@ -43,13 +52,15 @@ class UsageCount {
 		} else {
 			return ESQL::QueryFirstField("select count_id from page_usage where period_id = '$period_id' and thread_id = '$thread_id'");
 		}
-
-
 	}
 
 	static function GetCountAge() {
 		$start_date = ESQL::QueryFirstField("select start_date from usage where end_date is null limit 1");
 		return time() - strtotime($start_date);
+	}
+
+	static function GetCurrentTop() {
+		return null;
 	}
 }
 

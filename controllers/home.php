@@ -23,12 +23,22 @@ $app->get('/r/:subreddit/comments/:id/(:name/)', function($subreddit, $id, $name
 });
 
 $app->get('/comments/:id/', function($id) use ($app) {
-
-	// update the count for this thread
-	UsageCount::Increment($id);
-
 	$fs_root = ($_SERVER['SERVER_NAME'] == 'localhost')? '/redditstream' : '';
 	$app->render('thread.twig', array('thread_id' => $id, 'root' => $fs_root));
+});
+
+$app->post('/stats/increment/:id/', function($id) use ($app) {
+
+	// update the count for this thread
+	if(!isset($_POST['title'])) {
+		print json_encode(array('error'=>'Invalid Arguments'));
+		return;
+	}
+
+	PageInfo::Insert($id, $_POST['title']);
+	UsageCount::Increment($id);
+
+	print '{}';
 });
 
 ?>
