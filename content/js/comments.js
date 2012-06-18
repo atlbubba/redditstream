@@ -513,6 +513,9 @@ var CommentElement = new Class({
 			}
 		}
 
+		new_data.has_image = this.data.has_image;
+		new_data.image_url = this.data.image_url;
+
 		this.data = new_data;
 	},
 
