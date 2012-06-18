@@ -64,12 +64,14 @@ h1#title {
 	<img src='content/imgs/example-screenshot.png' style='width:800px; border: 1px solid gray; padding: 8px;'>
 </div>
 
+{% if top_links.length > 0 %}
 <div id='top-links'>
 	<h2>popular now:</h2>
 	{% for link in top_links %}
 	<div><a href='comments/{{link.thread_id}}/'>{{link.title}}</a></div>
 	{%endfor%}
 </div>
+{% endif %}
 
 </div>
 
