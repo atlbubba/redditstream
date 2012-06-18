@@ -134,36 +134,15 @@ var Ui = {
 				continue;
 			}
 
-			item.data.raw_html = item.data.body_html.decodeEntities();
-			item.data.created_utc_date = new Date(item.data.created_utc * 1000);
-			item.data.formatted_time = item.data.created_utc_date.format('%X');
-			item.data.time_hidden = 'hidden';
-			item.data.points = this.format_points(item.data.ups - item.data.downs);
-			item.data.see_replies_link = 'refresh';
 
-			item.data.upvoted = item.data.likes === true? 'has-voted' : '';
-			item.data.downvoted = item.data.likes === false? 'has-voted' : '';
 
-			if(this.prev_time != item.data.formatted_time) {
-				item.data.time_hidden = '';
-				this.prev_time = item.data.formatted_time;
-			}
-
-			if(!is_root && item.data.replies != '' && item.data.replies != null) {
-				// we have replies, but are not going to load them because we are already too deep
-				// so just flag the refresh link and move on
-				item.data.hasreplies = 'has-replies';
-				item.data.see_replies_link = 'load replies (' + item.data.replies.data.children.length + ')';
-			}
-
-			var jst = new JsTemplate('tmpl-comment');
-			var e = jst.render(item.data).inject(insert_into);
-
-			if(!this.first_load) {
-				// not the first element? then fade it in
-				e.style.opacity = '0';
-				e.fade();
-			}
+			var c = new CommentElement(
+				insert_into,
+				item.data, {
+					'first_load': this.first_load,
+					'is_root': is_root
+				}
+			);
 
 			if(is_root && item.data.replies != '') {
 				this.add_comments(item.data.replies.data.children, 0, 'c-rpl-' + item.data.id, false)
@@ -365,6 +344,63 @@ var Ui = {
 		}
 	}
 }
+
+var CommentElement = new Class({
+	initialize: function(container, data, options) {
+		this.container = $(container);
+		this.data = data;
+		this.options = options || {};
+		this.options.template = this.options.template || 'tmpl-comment';
+		this.options.is_root = $defined(this.options.is_root)? this.options.is_root : true;
+
+		if(!$defined(container) || !$defined(data)) {
+			throw 'Must define a container element and pass in data';
+		}
+
+		this.normalizeData();
+		this.createElement().inject(this.container);
+	},
+
+	createElement: function() {
+
+		var jst = new JsTemplate(this.options.template);
+		var e = jst.render(this.data);
+
+		if(!this.options.first_load) {
+			// not the first element? then fade it in
+			e.style.opacity = '0';
+			e.fade();
+		}
+
+		return e;
+	},
+
+	normalizeData: function() {
+
+		this.data.raw_html = this.data.body_html.decodeEntities();
+		this.data.created_utc_date = new Date(this.data.created_utc * 1000);
+		this.data.formatted_time = this.data.created_utc_date.format('%X');
+		this.data.time_hidden = 'hidden';
+		this.data.points = Ui.format_points(this.data.ups - this.data.downs);
+		this.data.see_replies_link = 'refresh';
+
+		this.data.upvoted = this.data.likes === true? 'has-voted' : '';
+		this.data.downvoted = this.data.likes === false? 'has-voted' : '';
+
+		if(this.prev_time != this.data.formatted_time) {
+			this.data.time_hidden = '';
+			this.prev_time = this.data.formatted_time;
+		}
+
+		if(!this.options.is_root && this.data.replies != '' && this.data.replies != null) {
+			// we have replies, but are not going to load them because we are already too deep
+			// so just flag the refresh link and move on
+			this.data.hasreplies = 'has-replies';
+			this.data.see_replies_link = 'load replies (' + this.data.replies.data.children.length + ')';
+		}
+	}
+
+});
 
 var ProxiedRequest = new Class({
 	Extends: Request.JSON,
