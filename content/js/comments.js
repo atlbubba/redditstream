@@ -136,12 +136,20 @@ var Ui = {
 				continue;
 			}
 
+			var date_string = (new Date(item.data.created_utc * 1000)).format('%X');
+			var show_time = false;
+			if(this.prev_time != date_string) {
+				show_time = true;
+				this.prev_time = date_string;
+			}
 
 			this.comment_elements[item.data.id] = new CommentElement(
 				insert_into,
 				item.data, {
+					'prev_time': this.prev_time,
 					'first_load': this.first_load,
-					'is_root': is_root
+					'is_root': is_root,
+					'show_time': show_time
 				}
 			);
 
@@ -170,14 +178,6 @@ var Ui = {
 				var replies = comment.data.replies.data.children;
 				this.refresh_comments(replies, replies.length);
 			}
-		}
-	},
-
-	format_points: function(count) {
-		if(count == 1) {
-			return count + ' point';
-		} else {
-			return count + ' points';
 		}
 	},
 
@@ -345,7 +345,7 @@ var CommentElement = new Class({
 		this.options = options || {};
 		this.options.template = this.options.template || 'tmpl-comment';
 		this.options.is_root = $defined(this.options.is_root)? this.options.is_root : true;
-		this.options.prev_time = this.options.last_time || null;
+		this.options.show_time = $defined(this.options.show_time)? this.options.show_time : false;
 
 		if(!$defined(container) || !$defined(data)) {
 			throw 'Must define a container element and pass in data';
@@ -376,13 +376,13 @@ var CommentElement = new Class({
 		this.data.formatted_time = this.data.created_utc_date.format('%X');
 		this.data.time_hidden = 'hidden';
 		this.data.karma = this.data.ups - this.data.downs;
-		this.data.points = Ui.format_points(this.data.karma);
+		this.data.points = this.format_points(this.data.karma);
 		this.data.see_replies_link = 'refresh';
 
 		this.data.upvoted = this.data.likes === true? 'has-voted' : '';
 		this.data.downvoted = this.data.likes === false? 'has-voted' : '';
 
-		if(this.options.prev_time != this.data.formatted_time) {
+		if(this.options.show_time) {
 			this.data.time_hidden = '';
 		}
 
@@ -397,7 +397,7 @@ var CommentElement = new Class({
 	updateData: function(new_data) {
 
 		new_data.karma = new_data.ups - new_data.downs;
-		this.element.getElement('.c-points').innerHTML = '(' + Ui.format_points(new_data.karma) + ')';
+		this.element.getElement('.c-points').innerHTML = '(' + this.format_points(new_data.karma) + ')';
 
 		if(new_data.replies != null && new_data.replies != '') {
 
@@ -422,7 +422,15 @@ var CommentElement = new Class({
 	updateVote: function(change) {
 		var e = this.element.getElement('.c-points');
 		this.data.karma += change;
-		e.innerHTML = '(' + Ui.format_points(this.data.karma) + ')';
+		e.innerHTML = '(' + this.format_points(this.data.karma) + ')';
+	},
+
+	format_points: function(count) {
+		if(count == 1) {
+			return count + ' point';
+		} else {
+			return count + ' points';
+		}
 	}
 
 });
