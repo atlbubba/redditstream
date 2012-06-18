@@ -254,6 +254,7 @@ var Ui = {
 	},
 
 	login: function(username, password) {
+
 		var req = new ProxiedRequest({
 			'url': 'http://www.reddit.com/api/login/' + username,
 			'onSuccess': function(response) {
@@ -514,7 +515,9 @@ var ProxiedRequest = new Class({
 
 	initialize: function(options) {
 		options = options || {};
-		options.url = '/shared/ba-simple-proxy.php?send_cookies=1&mode=native&url=' + escape(options.url);
+		user_agent = 'Mozilla/5.0 (Php 5.3; reddit-stream.com; en-us) reddit-stream.com (xhr via proxy)';
+
+		options.url = '/shared/ba-simple-proxy.php?user_agent=' + user_agent + '&send_cookies=1&mode=native&url=' + escape(options.url);
 
 		this.parent(options);
 	}
