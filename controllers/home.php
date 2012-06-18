@@ -32,15 +32,15 @@ $app->get('/comments/:id/', function($id) use ($app) {
 	$app->render('thread.twig', array('thread_id' => $id, 'root' => $fs_root));
 });
 
-$app->post('/stats/increment/:id/', function($id) use ($app) {
+$app->get('/stats/increment/:id/', function($id) use ($app) {
 
 	// update the count for this thread
-	if(!isset($_POST['title'])) {
+	if(!isset($_GET['title'])) {
 		print json_encode(array('error'=>'Invalid Arguments'));
 		return;
 	}
 
-	PageInfo::Insert($id, $_POST['title']);
+	PageInfo::Insert($id, $_GET['title']);
 	UsageCount::Increment($id);
 
 	print '{}';
