@@ -149,14 +149,14 @@ var Ui = {
 
 		$e('a', {
 			'text':post_info.data.title,
-			'href':post_info.data.permalink
+			'href':'http://www.reddit.com' + post_info.data.permalink
 		}).inject('post-title');
 
 		$('ps-author').innerHTML = post_info.data.author;
 		$('ps-author').href = 'http://www.reddit.com/user/' + post_info.data.author;
 
 		$('ps-count').innerHTML = post_info.data.num_comments;
-		$('ps-count').href = post_info.data.permalink;
+		$('ps-count').href = 'http://www.reddit.com' + post_info.data.permalink;
 
 		$('ps-subreddit').innerHTML = '/r/' + post_info.data.subreddit;
 		$('ps-subreddit').href = 'http://www.reddit.com/r/' + post_info.data.subreddit;
