@@ -148,8 +148,17 @@ var Ui = {
 
 		$e('a', {
 			'text':post_info.data.title,
-			'href':post_info.data.url
+			'href':post_info.data.permalink
 		}).inject('post-title');
+
+		$('ps-author').innerHTML = post_info.data.author;
+		$('ps-author').href = 'http://www.reddit.com/user/' + post_info.data.author;
+
+		$('ps-count').innerHTML = post_info.data.num_comments;
+		$('ps-count').href = post_info.data.permalink;
+
+		$('ps-subreddit').innerHTML = '/r/' + post_info.data.subreddit;
+		$('ps-subreddit').href = 'http://www.reddit.com/r/' + post_info.data.subreddit;
 
 		document.title = post_info.data.title + ' - reddit-stream';
 	},
@@ -505,7 +514,7 @@ var ProxiedRequest = new Class({
 
 	initialize: function(options) {
 		options = options || {};
-		options.url = '/redditstream/shared/ba-simple-proxy.php?send_cookies=1&mode=native&url=' + escape(options.url);
+		options.url = '/shared/ba-simple-proxy.php?send_cookies=1&mode=native&url=' + escape(options.url);
 
 		this.parent(options);
 	}
