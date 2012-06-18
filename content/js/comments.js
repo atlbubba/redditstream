@@ -407,7 +407,7 @@ var Ui = {
 	},
 
 	report_stats: function(title) {
-		new Request.JSON({'url': _fs_root + '/stats/increment/' + _thread_id + '/'}).get({'title': title});
+		new Request.JSON({'url': _fs_root + '/stats/increment/' + _thread_id}).get({'title': title});
 	}
 }
 

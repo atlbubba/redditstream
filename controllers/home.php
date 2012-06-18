@@ -32,7 +32,7 @@ $app->get('/comments/:id/', function($id) use ($app) {
 	$app->render('thread.twig', array('thread_id' => $id, 'root' => $fs_root));
 });
 
-$app->get('/stats/increment/:id/', function($id) use ($app) {
+$app->get('/stats/increment/:id', function($id) use ($app) {
 	$title = $app->request()->get('title');
 	// update the count for this thread
 	if($title == null) {
