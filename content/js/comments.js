@@ -26,16 +26,15 @@ var Ui = {
 			'callbackKey':'jsonp',
 			'onComplete': function(data){
 				var post_info = data[0].data.children[0];
-				var comments = data[1].data.children.reverse();
-				var start_index = this.new_comment(comments, this.last_id);
+				var comments = this.split_comments(data[1].data.children.reverse());
 				var was_bottom = this.is_at_bottom();
 
 				if(this.first_load) {
 					$('c-list').empty();
 				}
 
-				this.add_comments(comments, start_index);
-				this.refresh_comments(comments, start_index);
+				this.add_comments(comments.new);
+				this.refresh_comments(comments.old);
 
 				if(this.load_count % 5 == 0) {
 					// we only want to reload the page destription every so often
@@ -49,7 +48,7 @@ var Ui = {
 					this.first_load = false;
 				}
 
-				this.last_id = comments.getLast().data.id;
+				this.last_id = comments.new.getLast().data.id;
 
 				if(was_bottom) {
 					window.scrollTo(0, document.body.scrollHeight);
@@ -86,23 +85,31 @@ var Ui = {
 		return totalHeight <= (currentScroll + visibleHeight);
 	},
 
-	// returns the array index of the first new comment.
+	// splits the array of comments returned by the server into those that are already on the page
+	// and those that aren't.
 	//
-	// if none are new it will return comments.length.
-	// if all a new it will return 0
-	new_comment: function(comments, last_id) {
-		var start_index = 0;
+	// returns {new: [], old: []}
+	split_comments: function(comments) {
 
-		// loop through the list of comments to find the most recent one from last time.
-		// Everything after that is new. If we don't find the id, then everything is new
+		// if there is no id stored, then everything will be new (must be the
+		// first load)
+		var in_new = (this.last_id === null);
+		var result = {'new':[], 'old':[]};
+
 		for(var i=0; i < comments.length; i++) {
+			if(in_new) {
+				result.new.push(comments[i]);
+			} else {
+				result.old.push(comments[i]);
+			}
+
 			if(comments[i].data.id == this.last_id) {
-				start_index = i + 1;
-				break;
+				in_new = true;
 			}
 		}
 
-		return start_index;
+		return result;
+
 	},
 
 	set_post_info: function(post_info) {
@@ -121,7 +128,7 @@ var Ui = {
 		document.title = post_info.data.title + ' - reddit-stream';
 	},
 
-	add_comments: function(comments, start_index, insert_into, is_root) {
+	add_comments: function(comments, insert_into, is_root) {
 
 
 		comments = comments || [];
@@ -130,7 +137,7 @@ var Ui = {
 			is_root = true;
 		}
 
-		for(var i=start_index; i < comments.length; i++) {
+		for(var i=0; i < comments.length; i++) {
 			var item = comments[i];
 			if(!$defined(item.data.body)) {
 				continue;
@@ -154,7 +161,7 @@ var Ui = {
 			);
 
 			if(is_root && item.data.replies != '') {
-				this.add_comments(item.data.replies.data.children, 0, 'c-rpl-' + item.data.id, false)
+				this.add_comments(item.data.replies.data.children, 'c-rpl-' + item.data.id, false)
 			}
 		}
 	},
@@ -162,16 +169,16 @@ var Ui = {
 	// every time we refresh the data the vote counts etc for already
 	// displayed comments needs to be updated. The main reason to do this
 	// is to display a highlighted link if there are new replies
-	refresh_comments: function(comments, end_index) {
-		for(var i=0; i < end_index && i < comments.length; i++) {
+	refresh_comments: function(comments) {
+		for(var i=0; i < comments.length; i++) {
 			var comment = comments[i];
-			var elem = $('c-' + comment.data.id);
+			var ce = this.comment_elements[comment.data.id];
 
-			if(elem == null || comment == null || comment.kind != 't1') {
+			if(ce == null || comment == null || comment.kind != 't1') {
 				continue;
 			}
 
-			this.comment_elements[comment.data.id].updateData(comment.data);
+			ce.updateData(comment.data);
 
 			if(comment.data.replies != null && comment.data.replies != '') {
 				// be sure to update all the replies as well
@@ -205,7 +212,7 @@ var Ui = {
 
 				if(comment.data.replies != '') {
 					var replies = comment.data.replies.data.children;
-					this.add_comments(replies, 0, replies_elem, false);
+					this.add_comments(replies, replies_elem, false);
 				}
 			}.bind(this)
 		}).send();
