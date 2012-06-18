@@ -48,7 +48,9 @@ var Ui = {
 					this.first_load = false;
 				}
 
-				this.last_id = comments.new.getLast().data.id;
+				if(comments.new.length > 0) {
+					this.last_id = comments.new.getLast().data.id;
+				}
 
 				if(was_bottom) {
 					window.scrollTo(0, document.body.scrollHeight);
