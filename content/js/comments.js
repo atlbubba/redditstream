@@ -45,8 +45,8 @@ var Ui = {
 					$('c-list').empty();
 				}
 
-				this.add_comments(comments.new);
-				this.refresh_comments(comments.old);
+				this.add_comments(comments.new_list);
+				this.refresh_comments(comments.old_list);
 
 				if(this.load_count % 5 == 0) {
 					// we only want to reload the page destription every so often
@@ -61,8 +61,8 @@ var Ui = {
 					this.first_load = false;
 				}
 
-				if(comments.new.length > 0) {
-					this.last_id = comments.new.getLast().data.id;
+				if(comments.new_list.length > 0) {
+					this.last_id = comments.new_list.getLast().data.id;
 				}
 
 				if(was_bottom) {
@@ -113,19 +113,19 @@ var Ui = {
 	// splits the array of comments returned by the server into those that are already on the page
 	// and those that aren't.
 	//
-	// returns {new: [], old: []}
+	// returns {new_list: [], old_list: []}
 	split_comments: function(comments) {
 
 		// if there is no id stored, then everything will be new (must be the
 		// first load)
 		var in_new = (this.last_id === null);
-		var result = {'new':[], 'old':[]};
+		var result = {'new_list':[], 'old_list':[]};
 
 		for(var i=0; i < comments.length; i++) {
 			if(in_new) {
-				result.new.push(comments[i]);
+				result.new_list.push(comments[i]);
 			} else {
-				result.old.push(comments[i]);
+				result.old_list.push(comments[i]);
 			}
 
 			if(comments[i].data.id == this.last_id) {
