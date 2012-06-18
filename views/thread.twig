@@ -52,6 +52,17 @@
 <body>
 
 <div id='sidebar'>
+	<div id='user-bar' class='out'>
+		<div id='ub-login'>
+			<a href='javascript:Ui.show_login.bind(Ui)()'>login</a>
+		</div>
+
+		<div id='ub-logout'>
+			<a id='ub-username' href='javascript:void(0)'>username</a> |
+			<a id='ub-logout' href='javascript:Ui.logout.bind(Ui)()'>logout</a>
+		</div>
+	</div>
+
 	<div id='post-title'></div>
 	<div id='post-info' class='expanded'></div>
 	<div id='page-info'>

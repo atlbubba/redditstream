@@ -10,12 +10,24 @@ var Ui = {
 
 		this.load_cookies();
 		this.load_votes();
+		this.set_loginbar();
 
 		this.comment_elements = {};
 	},
 
+	set_loginbar: function() {
+		if(this.modhash != null) {
+			$('user-bar').addClass('in').removeClass('out');
+			$('ub-username').innerHTML = this.username;
+			$('ub-username').href = 'http://reddit.com/user/' + this.username;
+		} else {
+			$('user-bar').addClass('out').removeClass('in');
+		}
+	},
+
 	load_cookies: function() {
 		this.modhash = Cookie.read('reddit_modhash');
+		this.username = Cookie.read('reddit_username');
 	},
 
 	refresh: function() {
@@ -63,12 +75,22 @@ var Ui = {
 	},
 
 	set_votes: function() {
+		if(this.modhash == null) {
+			return;
+		}
+
 		this.upvoted.each(function(comment_id) {
-			$('c-'+comment_id).getElement('.uv-link').addClass('has-voted');
+			var e = $('c-'+comment_id);
+			if(e) {
+				e.getElement('.uv-link').addClass('has-voted');
+			}
 		});
 
 		this.downvoted.each(function(comment_id) {
-			$('c-'+comment_id).getElement('.dv-link').addClass('has-voted');
+			var e = $('c-'+comment_id);
+			if(e) {
+				$('c-'+comment_id).getElement('.dv-link').addClass('has-voted');
+			}
 		});
 	},
 
@@ -227,11 +249,15 @@ var Ui = {
 				if(response.json.errors.length != 0) {
 					$('ld-error').innerHTML = response.json.errors[0][1];
 				} else {
+					this.username = username;
 					this.modhash = response.json.data.modhash;
 					Cookie.write('reddit_session', response.json.data.cookie, {duration: 14});
 					Cookie.write('reddit_modhash', response.json.data.modhash, {duration: 14});
+					Cookie.write('reddit_username', this.username, {duration: 14});
 
 					$('login-dialog').hide();
+
+					this.set_loginbar();
 				}
 
 				$('ld-submit').disabled = false;
@@ -242,6 +268,16 @@ var Ui = {
 			'passwd': password,
 			'api_type': 'json'
 		});
+	},
+
+	logout: function() {
+
+		Cookie.dispose('reddit_modhash');
+		Cookie.dispose('reddit_session');
+		Cookie.dispose(_thread_id+'-uv');
+		Cookie.dispose(_thread_id+'-dv');
+
+		window.location.reload();
 	},
 
 	vote: function(id, name, direction) {
@@ -320,8 +356,8 @@ var Ui = {
 	},
 
 	load_votes: function() {
-		this.upvoted = JSON.decode(Cookie.read(_thread_id+'-uv') || '[]');
-		this.downvoted = JSON.decode(Cookie.read(_thread_id+'-dv') || '[]');
+		this.upvoted = JSON.decode(Cookie.read(_thread_id + '-uv') || '[]');
+		this.downvoted = JSON.decode(Cookie.read(_thread_id + '-dv') || '[]');
 	},
 
 	show_login: function() {
