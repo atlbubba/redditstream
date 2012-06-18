@@ -6,7 +6,7 @@
  * @copyright   2011 Josh Lockhart
  * @link        http://www.slimframework.com
  * @license     http://www.slimframework.com/license
- * @version     1.6.0
+ * @version     1.6.3
  * @package     Slim
  *
  * MIT LICENSE
@@ -62,7 +62,7 @@ class Slim_Environment implements ArrayAccess, IteratorAggregate {
      * Get environment instance (singleton)
      *
      * This creates and/or returns an Environment instance (singleton)
-     * derived from $_SERVER variables. You may override the global server 
+     * derived from $_SERVER variables. You may override the global server
      * variables by using `Environment::mock()` instead.
      *
      * @param   bool            $refresh    Refresh properties using global server variables?
@@ -137,7 +137,7 @@ class Slim_Environment implements ArrayAccess, IteratorAggregate {
             if ( strpos($_SERVER['REQUEST_URI'], $_SERVER['SCRIPT_NAME']) === 0 ) {
                 $env['SCRIPT_NAME'] = $_SERVER['SCRIPT_NAME']; //Without URL rewrite
             } else {
-                $env['SCRIPT_NAME'] = pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME); //With URL rewrite
+                $env['SCRIPT_NAME'] = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']) ); //With URL rewrite
             }
             $env['PATH_INFO'] = substr_replace($_SERVER['REQUEST_URI'], '', 0, strlen($env['SCRIPT_NAME']));
             if ( strpos($env['PATH_INFO'], '?') !== false ) {
@@ -158,6 +158,7 @@ class Slim_Environment implements ArrayAccess, IteratorAggregate {
             //HTTP request headers
             $specialHeaders = array('CONTENT_TYPE', 'CONTENT_LENGTH', 'PHP_AUTH_USER', 'PHP_AUTH_PW', 'PHP_AUTH_DIGEST', 'AUTH_TYPE');
             foreach ( $_SERVER as $key => $value ) {
+                $value = is_string($value) ? trim($value) : $value;
                 if ( strpos($key, 'HTTP_') === 0 ) {
                     $env[substr($key, 5)] = $value;
                 } else if ( strpos($key, 'X_') === 0 || in_array($key, $specialHeaders) ) {

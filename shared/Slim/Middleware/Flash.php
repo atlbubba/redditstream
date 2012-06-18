@@ -6,7 +6,7 @@
  * @copyright   2011 Josh Lockhart
  * @link        http://www.slimframework.com
  * @license     http://www.slimframework.com/license
- * @version     1.6.0
+ * @version     1.6.3
  * @package     Slim
  *
  * MIT LICENSE
@@ -64,7 +64,7 @@ class Slim_Middleware_Flash extends Slim_Middleware implements ArrayAccess {
     public function __construct( $settings = array() ) {
         $this->settings = array_merge(array('key' => 'slim.flash'), $settings);
         $this->messages = array(
-            'prev' => isset($_SESSION[$this->settings['key']]) ? $_SESSION[$this->settings['key']] : array(), //flash messages from prev request
+            'prev' => array(), //flash messages from prev request (loaded when middleware called)
             'next' => array(), //flash messages for next request
             'now' => array() //flash messages for current request
         );
@@ -75,6 +75,10 @@ class Slim_Middleware_Flash extends Slim_Middleware implements ArrayAccess {
      * @return  void
      */
     public function call() {
+        //Read flash messaging from previous request if available
+        $this->loadMessages();
+
+        //Prepare flash messaging for current request
         $env = $this->app->environment();
         $env['slim.flash'] = $this;
         $this->next->call();
@@ -125,6 +129,17 @@ class Slim_Middleware_Flash extends Slim_Middleware implements ArrayAccess {
      */
     public function save() {
         $_SESSION[$this->settings['key']] = $this->messages['next'];
+    }
+
+    /**
+     * Load messages
+     *
+     * Load messages from previous request if available
+     */
+    public function loadMessages() {
+        if ( isset($_SESSION[$this->settings['key']]) ) {
+            $this->messages['prev'] = $_SESSION[$this->settings['key']];
+        }
     }
 
     /**

@@ -6,7 +6,7 @@
  * @copyright   2011 Josh Lockhart
  * @link        http://www.slimframework.com
  * @license     http://www.slimframework.com/license
- * @version     1.6.0
+ * @version     1.6.3
  * @package     Slim
  *
  * MIT LICENSE
@@ -84,6 +84,25 @@ class Slim_Middleware_SessionCookie extends Slim_Middleware {
         if ( is_string($this->settings['expires']) ) {
             $this->settings['expires'] = strtotime($this->settings['expires']);
         }
+
+        /**
+         * Session
+         *
+         * We must start a native PHP session to initialize the $_SESSION superglobal.
+         * However, we won't be using the native session store for persistence, so we
+         * disable the session cookie and cache limiter. We also set the session
+         * handler to this class instance to avoid PHP's native session file locking.
+         */
+        ini_set('session.use_cookies', 0);
+        session_cache_limiter(false);
+        session_set_save_handler(
+            array($this, 'open'),
+            array($this, 'close'),
+            array($this, 'read'),
+            array($this, 'write'),
+            array($this, 'destroy'),
+            array($this, 'gc')
+        );
     }
 
     /**
@@ -102,6 +121,7 @@ class Slim_Middleware_SessionCookie extends Slim_Middleware {
      * @return  void
      */
     protected function loadSession() {
+        session_start();
         $value = Slim_Http_Util::decodeSecureCookie(
             $this->app->request()->cookies($this->settings['name']),
             $this->settings['secret'],
@@ -139,5 +159,33 @@ class Slim_Middleware_SessionCookie extends Slim_Middleware {
                 'httponly' => $this->settings['httponly']
             ));
         }
+        session_destroy();
+    }
+
+    /**
+     * Session Handler Stubs
+     */
+    public function open( $savePath, $sessionName ) {
+        return true;
+    }
+
+    public function close() {
+        return true;
+    }
+
+    public function read( $id ) {
+        return '';
+    }
+
+    public function write( $id, $data ) {
+        return true;
+    }
+
+    public function destroy( $id ) {
+        return true;
+    }
+
+    public function gc( $maxlifetime ) {
+        return true;
     }
 }

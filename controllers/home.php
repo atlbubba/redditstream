@@ -34,6 +34,7 @@ $app->get('/comments/:id/', function($id) use ($app) {
 
 $app->get('/stats/increment/:id', function($id) use ($app) {
 	$title = $app->request()->get('title');
+
 	// update the count for this thread
 	if($title == null) {
 		print json_encode(array('error'=>'Invalid Arguments'));
