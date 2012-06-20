@@ -56,7 +56,6 @@ var Ui = {
 
 				if(this.first_load) {
 					this.set_page_info(post_info);
-					this.set_votes();
 					this.report_stats(post_info.data.title);
 					this.first_load = false;
 				}
@@ -73,26 +72,6 @@ var Ui = {
 
 			}.bind(this)
 		}).send();
-	},
-
-	set_votes: function() {
-		if(this.modhash == null) {
-			return;
-		}
-
-		this.upvoted.each(function(comment_id) {
-			var e = $('c-'+comment_id);
-			if(e) {
-				e.getElement('.uv-link').addClass('has-voted');
-			}
-		});
-
-		this.downvoted.each(function(comment_id) {
-			var e = $('c-'+comment_id);
-			if(e) {
-				$('c-'+comment_id).getElement('.dv-link').addClass('has-voted');
-			}
-		});
 	},
 
 	is_at_bottom: function() {
@@ -194,8 +173,13 @@ var Ui = {
 			// exist on the page already. This can happen after the user comments
 			// and we refresh the data from the server - we will get their own comment
 			// back at us, even though it is already on the page
-			if(this.comment_elements[item.data.id] == null) {
+			if($('c-' + item.data.id) == null) {
 
+				if(this.upvoted.contains(item.data.id)) {
+					item.data.likes = true;
+				} else if(this.downvoted.contains(item.data.id)) {
+					item.data.likes = false;
+				}
 
 				this.comment_elements[item.data.id] = new CommentElement(
 					insert_into,
