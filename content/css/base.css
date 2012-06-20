@@ -2,9 +2,19 @@
 
 #c-list {
 	margin-left: 48px;
-	margin-bottom: 24px;
 	width: 55%;
 }
+
+#footerbar {
+	margin-top: 24px;
+	margin-bottom: 12px;
+	margin-left: 32px;
+}
+
+#footerbar a.reply-link {
+	font-weight: bold;
+}
+
 
 /* sidebar */
 

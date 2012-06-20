@@ -417,6 +417,12 @@ var Ui = {
 
 	new_comment: function(id) {
 		this.comment_elements[id].startReply();
+	},
+
+	new_root_comment: function() {
+		var ce = new CommentElement('c-list', {'id':_thread_id, 'name':'t3_'+_thread_id}, {'no_element': true});
+		ce.startReply('footerbar');
+
 	}
 }
 
@@ -429,18 +435,22 @@ var CommentElement = new Class({
 
 		this.options.template = this.options.template || 'tmpl-comment';
 		this.options.form_template = this.options.form_template || 'tmpl-addcomment';
-		this.options.is_root = $defined(this.options.is_root)? this.options.is_root : true;
-		this.options.show_time = $defined(this.options.show_time)? this.options.show_time : false;
 		this.options.modhash = this.options.modhash || Ui.modhash || null;
 		this.options.insert_position = this.options.insert_position || 'bottom';
+
+		this.options.is_root = $defined(this.options.is_root)? this.options.is_root : true;
+		this.options.show_time = $defined(this.options.show_time)? this.options.show_time : false;
+		this.options.no_element = $defined(this.options.no_element)? this.options.no_element : false;
 
 		if(!$defined(container) || !$defined(data)) {
 			throw 'Must define a container element and pass in data';
 		}
 
-		this.normalizeData();
-		this.element = this.createElement().inject(this.container, this.options.insert_position);
-		this.new_form = null;
+		if(!this.options.no_element) {
+			this.normalizeData();
+			this.element = this.createElement().inject(this.container, this.options.insert_position);
+		}
+
 	},
 
 	createElement: function() {
@@ -463,6 +473,7 @@ var CommentElement = new Class({
 		this.upvote_link = e.getElement('.uv-link');
 		this.downvote_link = e.getElement('.dv-link');
 		this.comment_body = e.getElement('.c-body');
+		this.new_form = null;
 
 		return e;
 	},
@@ -582,11 +593,14 @@ var CommentElement = new Class({
 		}
 	},
 
-	startReply: function() {
+	startReply: function(form_parent) {
+		form_parent = form_parent || this.comment_body;
+
 		if(this.new_form == null) {
-			this.new_form = (new JsTemplate(this.options.form_template)).render({}).inject(this.comment_body, 'after');
+			this.new_form = (new JsTemplate(this.options.form_template)).render({});
 			this.new_form.getElement('.cn-cancelbutton').addEvent('click', this.cancelReply.bind(this));
 			this.new_form.getElement('form').addEvent('submit', function() {this.saveReply(); return false;}.bind(this));
+			this.new_form.inject(form_parent, 'after')
 
 			this.form_input = this.new_form.getElement('textarea');
 		} else {
@@ -617,8 +631,14 @@ var CommentElement = new Class({
 		var req = new ProxiedRequest({
 			'url': 'http://www.reddit.com/api/comment',
 			'onSuccess': function(response) {
+				var data = null;
 				this.new_form.hide();
-				var data = response.jquery[30][3][0][0].data;
+
+				if(response.jquery.length >= 30) {
+					data = response.jquery[30][3][0][0].data;
+				} else {
+					data = response.jquery[18][3][0][0].data;
+				}
 
 				if(!$defined(data)) {
 					alert('Error: Could not save comment');
@@ -636,6 +656,18 @@ var CommentElement = new Class({
 	},
 
 	addOwnComment: function(raw_data) {
+		var insert_into = null;
+		var insert_position = 'top';
+
+		if(this.element == null) {
+			insert_into = this.container;
+			insert_position = 'bottom';
+		} else {
+			insert_into = this.element.getElement('.c-replies');
+		}
+
+		// if this is a no-element comment, then will we insert the new comment into the container root
+
 		// when adding a comment the data we get back is not normal, so we need to
 		// get it into the correct format first.
 		var data = {};
@@ -649,11 +681,14 @@ var CommentElement = new Class({
 		data.downs = 0;
 		data.likes = true;
 
-		var ce = new CommentElement(this.element.getElement('.c-replies'), data, {'insert_position': 'top'});
+
+		var ce = new CommentElement(insert_into, data, {'insert_position': insert_position});
 
 		// FIXME: due to poor design, we need to insert this into the parent list as well
 		// so lets just reference explicitly for now, even though it is bad coupling
 		Ui.comment_elements[data.id] = ce;
+		Ui.upvoted.push(data.id);
+		Ui.save_votes.bind(Ui)();
 	}
 
 });
