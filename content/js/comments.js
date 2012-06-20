@@ -651,7 +651,7 @@ var CommentElement = new Class({
 					data = response.jquery[18][3][0][0].data;
 				}
 
-				if($defined(data) || data == null) {
+				if(!$defined(data) || data == null) {
 					alert('Error: Could not save comment');
 					return;
 				}
