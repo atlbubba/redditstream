@@ -408,10 +408,20 @@ var Ui = {
 	},
 
 	new_comment: function(id) {
+		if(this.modhash == null) {
+			this.show_login();
+			return;
+		}
+
 		this.comment_elements[id].startReply();
 	},
 
 	new_root_comment: function() {
+		if(this.modhash == null) {
+			this.show_login();
+			return;
+		}
+
 		var ce = new CommentElement('c-list', {
 			'id':_thread_id,
 			'name':'t3_'+_thread_id,
