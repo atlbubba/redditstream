@@ -193,7 +193,6 @@ var Ui = {
 			this.comment_elements[item.data.id] = new CommentElement(
 				insert_into,
 				item.data, {
-					'prev_time': this.prev_time,
 					'first_load': this.first_load,
 					'is_root': is_root,
 					'show_time': show_time
@@ -242,6 +241,8 @@ var Ui = {
 
 		refresh_link.innerHTML = 'refresh';
 		refresh_link.removeClass('has-replies');
+
+		this.comment_elements[parent_id].new_form = null;
 
 		new Request.JSONP({
 			'url':request_url,
@@ -430,13 +431,15 @@ var CommentElement = new Class({
 		this.options.form_template = this.options.form_template || 'tmpl-addcomment';
 		this.options.is_root = $defined(this.options.is_root)? this.options.is_root : true;
 		this.options.show_time = $defined(this.options.show_time)? this.options.show_time : false;
+		this.options.modhash = this.options.modhash || Ui.modhash || null;
+		this.options.insert_position = this.options.insert_position || 'bottom';
 
 		if(!$defined(container) || !$defined(data)) {
 			throw 'Must define a container element and pass in data';
 		}
 
 		this.normalizeData();
-		this.element = this.createElement().inject(this.container);
+		this.element = this.createElement().inject(this.container, this.options.insert_position);
 		this.new_form = null;
 	},
 
@@ -582,7 +585,75 @@ var CommentElement = new Class({
 	startReply: function() {
 		if(this.new_form == null) {
 			this.new_form = (new JsTemplate(this.options.form_template)).render({}).inject(this.comment_body, 'after');
+			this.new_form.getElement('.cn-cancelbutton').addEvent('click', this.cancelReply.bind(this));
+			this.new_form.getElement('form').addEvent('submit', function() {this.saveReply(); return false;}.bind(this));
+
+			this.form_input = this.new_form.getElement('textarea');
+		} else {
+			this.new_form.getElement('form').reset();
+			save_button.disabled = false;
+			save_button.value = 'save';
+			this.new_form.show();
 		}
+
+		this.form_input.focus();
+	},
+
+	cancelReply: function() {
+		this.new_form.hide();
+	},
+
+	saveReply: function() {
+		var save_button = this.new_form.getElement('input[type=submit]');
+
+		save_button.disabled = true;
+		save_button.value = 'saving...';
+		post_text = this.form_input.value.trim();
+
+		if(post_text == '') {
+			return;
+		}
+
+		var req = new ProxiedRequest({
+			'url': 'http://www.reddit.com/api/comment',
+			'onSuccess': function(response) {
+				this.new_form.hide();
+				var data = response.jquery[30][3][0][0].data;
+
+				if(!$defined(data)) {
+					alert('Error: Could not save comment');
+					return;
+				}
+
+				this.addOwnComment(data);
+
+			}.bind(this)
+		}).post({
+			'parent': this.data.name,
+			'text': post_text,
+			'uh': this.options.modhash
+		});
+	},
+
+	addOwnComment: function(raw_data) {
+		// when adding a comment the data we get back is not normal, so we need to
+		// get it into the correct format first.
+		var data = {};
+		data.id = raw_data.id.split('_')[1];
+		data.name = raw_data.id;
+		data.body = raw_data.contentText;
+		data.body_html = raw_data.contentHTML;
+		data.replies = null;
+		data.created_utc = Math.round((new Date()).getTime() / 1000);
+		data.ups = 1
+		data.downs = 0;
+		data.likes = true;
+
+		var ce = new CommentElement(this.element.getElement('.c-replies'), data, {'insert_position': 'top'});
+
+		// FIXME: due to poor design, we need to insert this into the parent list as well
+		// so lets just reference explicitly for now, even though it is bad coupling
+		Ui.comment_elements[data.id] = ce;
 	}
 
 });
