@@ -29,6 +29,7 @@
 		<span class='c-points'>(#{points})</span>
 
 		<div class='right'>
+			<a href='javascript:Ui.new_comment.bind(Ui)("#{id}")'>reply</a>
 			<a class='r-link #{hasreplies}' href='javascript:Ui.refresh_replies.bind(Ui)("#{id}")'>#{see_replies_link}</a>
 		</div>
 	</div>
@@ -44,6 +45,22 @@
 	</div>
 
 	<div id='c-rpl-#{id}' class='c-replies'></div>
+</div>
+
+</script>
+
+<script id='tmpl-addcomment' type='text/html'>
+
+<div class='c-new'>
+	<form>
+		<div>
+			<textarea></textarea>
+		</div>
+		<div>
+			<input class='cn-savebutton' type='submit' value='save'>
+			<input class='cn-cancelbutton' type='button' value='cancel'>
+		</div>
+	</form>
 </div>
 
 </script>
@@ -84,6 +101,8 @@
 <div id='c-list'>
 	<div id='main-loading'>loading...</div>
 </div>
+
+
 
 <div id='login-dialog' style='display:none'>
 	<form onsubmit='Ui.start_login.bind(Ui)(); return false;'>

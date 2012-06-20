@@ -412,6 +412,10 @@ var Ui = {
 
 	report_stats: function(title) {
 		new Request.JSON({'url': _fs_root + '/stats/increment/' + _thread_id}).get({'title': title});
+	},
+
+	new_comment: function(id) {
+		this.comment_elements[id].startReply();
 	}
 }
 
@@ -421,7 +425,9 @@ var CommentElement = new Class({
 		this.container = $(container);
 		this.data = data;
 		this.options = options || {};
+
 		this.options.template = this.options.template || 'tmpl-comment';
+		this.options.form_template = this.options.form_template || 'tmpl-addcomment';
 		this.options.is_root = $defined(this.options.is_root)? this.options.is_root : true;
 		this.options.show_time = $defined(this.options.show_time)? this.options.show_time : false;
 
@@ -431,6 +437,7 @@ var CommentElement = new Class({
 
 		this.normalizeData();
 		this.element = this.createElement().inject(this.container);
+		this.new_form = null;
 	},
 
 	createElement: function() {
@@ -452,6 +459,7 @@ var CommentElement = new Class({
 
 		this.upvote_link = e.getElement('.uv-link');
 		this.downvote_link = e.getElement('.dv-link');
+		this.comment_body = e.getElement('.c-body');
 
 		return e;
 	},
@@ -480,6 +488,8 @@ var CommentElement = new Class({
 			this.data.see_replies_link = 'load replies (' + this.data.replies.data.children.length + ')';
 		}
 
+		// if the comment has a link directly to an image in it, we want to be able to
+		// show the image, just by clicking on the post. This extracts the data to do that
 		var image_regex = /\[.+\]\((http:.+\.(png|jpg|gif))\)/i;
 		var match = image_regex.exec(this.data.body);
 		if(match != null) {
@@ -567,7 +577,12 @@ var CommentElement = new Class({
 			this.image_element.hide();
 			this.image_visible = false;
 		}
+	},
 
+	startReply: function() {
+		if(this.new_form == null) {
+			this.new_form = (new JsTemplate(this.options.form_template)).render({}).inject(this.comment_body, 'after');
+		}
 	}
 
 });

@@ -193,7 +193,7 @@
 	margin-left: 24px;
 }
 
-.c-replies .comment {
+.c-replies .comment, .c-new {
 	padding-left: 26px;
 	border-left: 1px solid #ddd;
 }
@@ -203,6 +203,18 @@
 	font-style: italic;
 	padding-left: 8px;
 	border-left: 1px solid #ddd;
+}
+
+/* new comment */
+
+.c-new {
+	margin-top: 12px;
+	margin-left: 24px;
+}
+
+.c-new textarea {
+	width: 500px;
+	height: 100px;
 }
 
 /* comment voting */
