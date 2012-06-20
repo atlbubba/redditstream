@@ -236,6 +236,9 @@
 .c-new textarea {
 	width: 500px;
 	height: 100px;
+
+	font-family: verdana, arial;
+	padding: 3px;
 }
 
 /* comment voting */
