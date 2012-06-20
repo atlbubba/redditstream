@@ -132,7 +132,7 @@
 	margin-top: 12px;
 }
 
-.comment.has-image .c-body:hover {
+.comment.has-image > .c-body:hover {
 	cursor: pointer;
 	background: #ddd;
 }

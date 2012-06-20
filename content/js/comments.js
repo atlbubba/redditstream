@@ -504,9 +504,11 @@ var CommentElement = new Class({
 
 		// if the comment has a link directly to an image in it, we want to be able to
 		// show the image, just by clicking on the post. This extracts the data to do that
-		var image_regex = /\[.+\]\((http:.+\.(png|jpg|gif))\)/i;
+		var image_regex = /(http:.+\.(png|jpg|gif))/i;
 		var match = image_regex.exec(this.data.body);
+
 		if(match != null) {
+
 			this.image_visible = false;
 			this.data.has_image = true;
 			this.data.image_url = match[1];
