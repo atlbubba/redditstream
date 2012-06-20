@@ -190,14 +190,22 @@ var Ui = {
 				this.prev_time = date_string;
 			}
 
-			this.comment_elements[item.data.id] = new CommentElement(
-				insert_into,
-				item.data, {
-					'first_load': this.first_load,
-					'is_root': is_root,
-					'show_time': show_time
-				}
-			);
+			// only try to create the comment if one with the same id doesn't
+			// exist on the page already. This can happen after the user comments
+			// and we refresh the data from the server - we will get their own comment
+			// back at us, even though it is already on the page
+			if(this.comment_elements[item.data.id] == null) {
+
+
+				this.comment_elements[item.data.id] = new CommentElement(
+					insert_into,
+					item.data, {
+						'first_load': this.first_load,
+						'is_root': is_root,
+						'show_time': show_time
+					}
+				);
+			}
 
 			if(is_root && item.data.replies != '') {
 				this.add_comments(item.data.replies.data.children, 'c-rpl-' + item.data.id, false)
