@@ -9,6 +9,17 @@ class PageInfo {
 			'title'=>$title
 		));
 	}
+
+	// do we already have the title stored for that id? If so there
+	// is no reason for the client to send it to the server
+	static function HasTitle($thread_id) {
+		$result = ESQL::SelectFirstField('page_info', array(
+			'column_list'=>array('thread_id'),
+			'where'=>array('thread_id'=>$thread_id)
+		));
+
+		return $result != null;
+	}
 }
 
 class UsageCount {
