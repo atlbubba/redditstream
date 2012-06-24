@@ -39,6 +39,7 @@
 }
 
 #sidebar-wrap {
+	height: 100%;
 	margin-right: 12px;
 }
 
@@ -100,7 +101,7 @@
 	font-size: 9pt;
 	overflow: hidden;
 	border: 1px solid #ccc;
-	max-height: 65%;
+	max-height: 70%;
 }
 
 #post-info.expanded {
