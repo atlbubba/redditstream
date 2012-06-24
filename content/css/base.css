@@ -1,14 +1,15 @@
 /* general, page wide */
 
-#c-list {
+#c-main {
 	margin-left: 48px;
 	width: 55%;
 }
 
+
 #footerbar {
 	margin-top: 24px;
 	margin-bottom: 12px;
-	margin-left: 32px;
+	margin-left: -12px;
 }
 
 #footerbar a.reply-link {
@@ -16,6 +17,7 @@
 }
 
 #c-main > .c-new {
+	margin-left: -12px;
 	margin-bottom: 12px;
 }
 
@@ -34,6 +36,14 @@
 	margin-left: 48px;
 	width: 55%;
 	position: static !important;
+}
+
+#sidebar-wrap {
+	margin-right: 12px;
+}
+
+#sidebar.on-top #sidebar-wrap  {
+	margin-right: 0;
 }
 
 /* sidebar - login stuff */
@@ -55,13 +65,13 @@
 
 /* sidebar post info / title */
 
+
 #sidebar #post-title {
 	font-size: 20pt;
 }
 
 #post-title {
 	margin-top: 12px;
-	margin-right: 12px;
 }
 
 #post-title a {
@@ -86,7 +96,6 @@
 
 #post-info {
 	margin-top: 12px;
-	margin-right: 12px;
 	padding: 8px;
 	font-size: 9pt;
 	overflow: hidden;

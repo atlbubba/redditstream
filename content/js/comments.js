@@ -74,6 +74,10 @@ var Ui = {
 		}).send();
 	},
 
+	load_previous: function() {
+		alert('test');
+	},
+
 	is_at_bottom: function() {
 		var totalHeight, currentScroll, visibleHeight;
 
