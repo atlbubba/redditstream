@@ -360,8 +360,9 @@ var Ui = {
 
 	save_votes: function() {
 		if(this.upvoted != null && this.downvoted != null) {
-			Cookie.write(_thread_id+'-uv', JSON.encode(this.upvoted), {duration: 14});
-			Cookie.write(_thread_id+'-dv', JSON.encode(this.downvoted), {duration: 14});
+			var cookie_path = '/comments/' + _thread_id
+			Cookie.write(_thread_id+'-uv', JSON.encode(this.upvoted), {duration: 14, path:cookie_path});
+			Cookie.write(_thread_id+'-dv', JSON.encode(this.downvoted), {duration: 14, path:cookie_path});
 		}
 	},
 
