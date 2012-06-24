@@ -1,0 +1,23 @@
+
+#sidebar {
+	margin-left: 12px;
+	width: 100%;
+	margin:0;
+	padding:0;
+	position: static !important;
+}
+
+#sidebar-wrap {
+	margin:0;
+	padding:0;
+}
+
+#c-main {
+	margin-left: 18px;
+	width: 95%;
+}
+
+#c-list {
+
+	width: 100%;
+}
