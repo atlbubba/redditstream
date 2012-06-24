@@ -698,7 +698,7 @@ var CommentElement = new Class({
 		data.ups = 1
 		data.downs = 0;
 		data.likes = true;
-		data.author = this.data.author;
+		data.author = Ui.username; // FIXME: remove this dependecny
 
 
 		var ce = new CommentElement(insert_into, data, {'insert_position': insert_position});
