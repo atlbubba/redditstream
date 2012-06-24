@@ -18,6 +18,9 @@
 }
 
 #c-list {
-
 	width: 100%;
+}
+
+.c-new textarea {
+	width: 90%;
 }
