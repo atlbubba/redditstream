@@ -63,6 +63,9 @@
 	text-align: right;
 	padding: 12px;
 	border-bottom: 4px solid #ccc;
+
+	margin-left: -1px;
+	margin-right: -1px;
 }
 
 #user-bar a {
