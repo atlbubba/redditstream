@@ -30,17 +30,26 @@
 	left: 60%;
 	width: 40%;
 	height: 100%;
+
+	background-color: #eee;
+	border-left: 1px solid #ccc;
 }
 
 #sidebar.on-top {
 	margin-left: 48px;
+	padding:0;
+
 	width: 55%;
 	position: static !important;
+
+	border-bottom: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
 }
 
 #sidebar-wrap {
 	height: 100%;
-	margin-right: 12px;
+	padding:8px;
 }
 
 #sidebar.on-top #sidebar-wrap  {
@@ -49,9 +58,11 @@
 
 /* sidebar - login stuff */
 #user-bar {
+	color: white;
+	background-color: #222;
 	text-align: right;
-	margin-right:12px;
-	margin-top:8px;
+	padding: 12px;
+	border-bottom: 4px solid #ccc;
 }
 
 #user-bar a {
@@ -76,7 +87,7 @@
 }
 
 #post-title a {
-	color: black;
+	color: #222;
 }
 
 #post-title a:hover {
@@ -101,7 +112,8 @@
 	font-size: 9pt;
 	overflow: hidden;
 	border: 1px solid #ccc;
-	max-height: 70%;
+	max-height: 65%;
+	background-color: white;
 }
 
 #post-info.expanded {
