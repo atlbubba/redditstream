@@ -719,7 +719,10 @@ var ProxiedRequest = new Class({
 		options = options || {};
 		user_agent = 'Mozilla/5.0 (Php 5.3; reddit-stream.com; en-us) reddit-stream.com (xhr via proxy)';
 
-		options.url = '/redditstream/shared/proxy-wrapper.php?user_agent=' + user_agent + '&send_cookies=1&mode=native&url=' + escape(options.url);
+		options.url = '/shared/proxy-wrapper.php?user_agent=' + user_agent + '&send_cookies=1&mode=native&url=' + escape(options.url);
+		options.onFailure = function(xhr) {
+			alert('Error: ' + xhr.status + ' - ' + xhr.statusText);
+		}
 
 		this.parent(options);
 	}
