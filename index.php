@@ -1,5 +1,7 @@
 <?php
 
+define('__ROOT__', dirname(__FILE__));
+
 require_once 'models/db.php';
 require_once 'shared/Slim/Slim.php';
 require_once 'shared/Slim/Views/TwigView.php';

@@ -1,6 +1,6 @@
 <?php
 
-require_once 'shared/esql.inc.php';
+require_once __ROOT__.'/shared/esql.inc.php';
 
 class PageInfo {
 	static function Insert($thread_id, $title) {
