@@ -13,6 +13,25 @@ var Ui = {
 		this.set_loginbar();
 
 		this.comment_elements = {};
+
+		this.unread_count = 0;
+		this.no_focus = false;
+		this.post_title = null;
+
+		window.addEvent('focus', function() {
+			this.no_focus = false;
+			this.unread_count = 0;
+
+			// for some strange reason, there needs to be a delay between getting focus and seeting
+			// the title, otherwise the title will not change properly. Anything less than
+			// 100 ms seems to cause problems.
+			var d = function() { document.title = Ui.post_title + ' - redditstream'; }.delay(100);
+		}.bind(Ui));
+
+		window.addEvent('blur', function() {
+			this.no_focus = true;
+		}.bind(Ui));
+
 	},
 
 	set_loginbar: function() {
@@ -43,10 +62,22 @@ var Ui = {
 
 				if(this.first_load) {
 					$('c-list').empty();
+					this.post_title = post_info.data.title;
 				}
 
 				this.add_comments(comments.new_list);
 				this.refresh_comments(comments.old_list);
+
+				if(this.no_focus == true) {
+					// when the windows doesn't have focus we want to show the number of unread messages in the
+					// title
+					this.unread_count += comments.new_list.length;
+
+				}
+
+				if(this.unread_count != 0) {
+					document.title = '(' + this.unread_count + ') ' + this.post_title + ' - reddit-stream.com';
+				}
 
 				if(this.load_count % 5 == 0) {
 					// we only want to reload the page destription every so often
@@ -148,7 +179,10 @@ var Ui = {
 		$('ps-subreddit').innerHTML = '/r/' + post_info.data.subreddit;
 		$('ps-subreddit').href = 'http://www.reddit.com/r/' + post_info.data.subreddit;
 
-		document.title = post_info.data.title + ' - reddit-stream';
+		// only update the title if the page has focus - otherwise we will show the unread count
+		if(!this.no_focus) {
+			document.title = post_info.data.title + ' - reddit-stream.com';
+		}
 	},
 
 	add_comments: function(comments, insert_into, is_root) {
@@ -727,4 +761,3 @@ var ProxiedRequest = new Class({
 		this.parent(options);
 	}
 });
-
