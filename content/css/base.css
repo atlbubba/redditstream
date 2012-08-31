@@ -254,6 +254,16 @@
 	border-left: 1px solid #ddd;
 }
 
+.c-flair {
+	border: 1px solid #ddd;
+	font-size: smaller;
+	padding: 1px;
+}
+
+.c-flair.hidden {
+	display: none;
+}
+
 /* new comment */
 
 .c-new {
