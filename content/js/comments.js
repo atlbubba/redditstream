@@ -551,6 +551,12 @@ var CommentElement = new Class({
 			this.data.hasreplies = 'has-replies';
 			this.data.see_replies_link = 'load replies (' + this.data.replies.data.children.length + ')';
 		}
+		if (!this.data.author_flair_text) {
+			this.data.add_flair_class = 'hidden';
+		}
+		else {
+			this.data.add_flair_class = '';
+		}
 
 		// if the comment has a link directly to an image in it, we want to be able to
 		// show the image, just by clicking on the post. This extracts the data to do that
