@@ -88,7 +88,7 @@
 }
 
 #post-title {
-	margin-top: 12px;
+	margin-top: 6px;
 }
 
 #post-title a {
@@ -349,7 +349,6 @@
 	background-color: #FFF6BF;
 	font-size:10pt;
 	line-height: 1.5;
-	margin-top: 8px;
 	padding: 3px;
 	vertical-align: middle;
 }
