@@ -5,6 +5,14 @@
 	width: 55%;
 }
 
+@media only screen and (max-width:900px) {
+	/* because of the way the box model works this is required to stop
+	 * from getting overlapping effects as the window gets smaller
+	 */
+	#c-main {
+		width: 50%;
+	}
+}
 
 #footerbar {
 	margin-top: 24px;
