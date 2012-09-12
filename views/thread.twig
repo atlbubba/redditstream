@@ -27,15 +27,18 @@
 <div id='c-#{id}' class='comment'>
 
 	<div class='c-header'>
+		<div class='left'>
+			<a class='c-username' href='http://www.reddit.com/user/#{author}'>#{author}</a>
+			<span class='c-flair #{add_flair_class}'>#{author_flair_text}</span>
+			<span class='c-points'>(#{points})</span>
+		</div>
 
-		<a class='c-username' href='http://www.reddit.com/user/#{author}'>#{author}</a>
-		<span class='c-flair #{add_flair_class}'>#{author_flair_text}</span>
-		<span class='c-points'>(#{points})</span>
-
-		<div class='right'>
+		<div class='actions right'>
 			<a href='javascript:Ui.new_comment.bind(Ui)("#{id}")'>reply</a>
 			<a class='r-link #{hasreplies}' href='javascript:Ui.refresh_replies.bind(Ui)("#{id}")'>#{see_replies_link}</a>
 		</div>
+
+		<div class='clear'></div>
 	</div>
 
 	<div class='left' style='margin-left: -18px;'>

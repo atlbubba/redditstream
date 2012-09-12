@@ -9,7 +9,8 @@
 
 #c-main {
 	margin-left: 18px;
-	width: 95%;
+	margin-right: 8px;
+	width: auto;
 }
 
 #c-list {
@@ -22,4 +23,12 @@
 
 #pi-layoutspan {
 	display: none;
+}
+
+.c-header div {
+	float: none;
+}
+
+.c-header div.actions {
+	margin-top: 4px;
 }

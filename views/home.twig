@@ -36,12 +36,37 @@ h1#title {
 	margin-top: 12px;
 }
 
+#top-links div {
+	margin-bottom: 8px;
+}
+
 #top-links h2 {
 	margin-bottom: 12px;
 }
 
 #top-links a {
 	font-weight: bold;
+}
+
+@media only screen and (max-width:600px) {
+	#images {
+		display: none;
+	}
+
+	#c-main {
+		margin: 0;
+		width: 100%;
+	}
+
+	#top-links, #b-header h1, #b-header div#info-block {
+		padding: 8px;
+	}
+
+
+	h1#title {
+		background-color: #222;
+		color: gray;
+	}
 }
 
 </style>
@@ -52,11 +77,13 @@ h1#title {
 
 <div id='c-main'>
 
-<h1 id='title'>A better way to view live-event reddit threads</h1>
+<div id='b-header'>
+	<h1 id='title'>A better way to view live reddit threads</h1>
 
-<div id='info-block'>
-	<div>Just replace reddit.com with reddit-stream.com on the comments page (or use this bookmarklet:
-	<a href="javascript:(function stream() {var s = window.location.href.split('/');var id = s[s.indexOf('comments')+1];if(s.indexOf('comments') != -1) { window.location.href = 'http://{{url_root}}/comments/' + id;	}})();"><b>reddit stream</b></a>) to get a live updating list of the newest comments.
+	<div id='info-block'>
+		<div><b>Just replace reddit.com with reddit-stream.com on any comment thread</b> (or use this bookmarklet:
+		<a href="javascript:(function stream() {var s = window.location.href.split('/');var id = s[s.indexOf('comments')+1];if(s.indexOf('comments') != -1) { window.location.href = 'http://{{url_root}}/comments/' + id;	}})();"><b>reddit stream</b></a>) to get a live updating list of the newest comments.
+		</div>
 	</div>
 </div>
 
@@ -67,8 +94,9 @@ h1#title {
 {% if top_links|length > 0 %}
 <div id='top-links'>
 	<h2>popular now:</h2>
+
 	{% for link in top_links %}
-	<div><a href='comments/{{link.thread_id}}/'>{{link.title}}</a></div>
+		<div><a href='comments/{{link.thread_id}}/'>{{link.title}}</a></div>
 	{%endfor%}
 </div>
 {% endif %}
