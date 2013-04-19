@@ -147,6 +147,15 @@ var Ui = {
 			}
 		}
 
+		if(in_new == false) {
+			// every single comment we received was new, but they all ended up
+			// in the old_list, cause we never reached the sentinal at the end
+			// that matches something on the page. So we just swap the old and new
+			// and return
+			result.new_list = result.old_list;
+			result.old_list = [];
+		}
+
 		return result;
 
 	},
