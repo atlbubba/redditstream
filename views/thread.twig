@@ -141,7 +141,7 @@
 
 <div id='login-dialog' style='display:none'>
 	<form onsubmit='Ui.start_login.bind(Ui)(); return false;'>
-		<div>
+		<div style='display:none'>
 			<div><b>Login Required</b></div>
 
 			<div id='ld-inputs'>
@@ -155,9 +155,20 @@
 
 			<div class='info-text' style='color:red'><b>MORE IMPORTANT:</b> If you start getting error messages, it means we've been throttled by reddit, so dont keep trying!</div>
 		</div>
-		<div id='ld-buttons'>
+		<div id='ld-buttons' style='display:none'>
 			<input id='ld-submit' type='submit' value='login'>
 			<input type='button' value='cancel' onclick='$("login-dialog").hide()'>
+		</div>
+		<div>
+			<h3>Logging in disabled</h3>
+			<div>
+				Due to the massive spike in usage caused by the events in Boston, we've had to disable logging
+				in for now, in order to reduce the load on the server. Sorry, I hope to have it back to normal as
+				soon as possible.
+			</div>
+			<div>
+				<input type='button' value='close' onclick='$("login-dialog").hide()'>
+			</div>
 		</div>
 	</form>
 </div>
