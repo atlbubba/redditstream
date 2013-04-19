@@ -2,6 +2,7 @@
 
 if(isset($argv)) {
 	chdir('../../');
+	define(__ROOT__, '/home/reednj/reddit-stream.com');
 	require_once 'models/db.php';
 	$result = CountPeriod::OpenNew();
 
