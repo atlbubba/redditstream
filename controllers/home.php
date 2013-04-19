@@ -32,7 +32,7 @@ $app->get('/comments/:id/', function($id) use ($app) {
 
 	if(PageInfo::HasTitle($id)) {
 		$send_title = false;
-		UsageCount::Increment($id);
+		//UsageCount::Increment($id);
 	} else {
 		$send_title = true;
 	}
