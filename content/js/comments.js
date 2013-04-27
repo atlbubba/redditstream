@@ -1,3 +1,8 @@
+
+if(typeof _is_prod === 'undefined') {
+	_is_prod = false;
+}
+
 var Ui = {
 	init: function() {
 		this.load_count = 0;
@@ -766,9 +771,15 @@ var ProxiedRequest = new Class({
 
 	initialize: function(options) {
 		options = options || {};
-		user_agent = 'Mozilla/5.0 (Php 5.3; reddit-stream.com; en-us) reddit-stream.com (xhr via proxy)';
+		var user_agent = 'Mozilla/5.0 (Php 5.3; reddit-stream.com; en-us) reddit-stream.com (xhr via proxy)';
+		var is_prod = _is_prod;
 
 		options.url = '/shared/proxy-wrapper.php?user_agent=' + user_agent + '&send_cookies=1&mode=native&url=' + escape(options.url);
+
+		if(is_prod === false) {
+			options.url = '/redditstream' + options.url;
+		}
+
 		options.onFailure = function(xhr) {
 			alert('Error: ' + xhr.status + ' - ' + xhr.statusText);
 		}
