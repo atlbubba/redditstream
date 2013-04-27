@@ -3,11 +3,20 @@
 require_once __ROOT__.'/shared/esql.inc.php';
 
 class ErrorLog {
-	static function Insert($error_code, $error_message) {
+	static function Insert($action_name, $error_code, $error_message) {
 		return ESQL::Insert('error_log', array(
+			'action_name' => $action_name,
 			'error_code' => $error_code,
 			'error_message'=>$error_message
 		));
+	}
+
+	static function InsertFromJson($action_name, $json_data) {
+	    if(sizeof($json_data->json->errors) > 0) {
+	      $error_code = $json_data->json->errors[0][0];
+	      $error_message = $json_data->json->errors[0][1];
+	      ErrorLog::Insert($action_name, $error_code, $error_message);
+	    }
 	}
 }
 

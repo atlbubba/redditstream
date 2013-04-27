@@ -20,6 +20,7 @@
 {% endif %}
 
 <script type='text/javascript'>
+	_id_prod = {{is_prod? 'true' : 'false' }};
 	_fs_root = '{{root}}'
 	_thread_id = '{{thread_id}}';
 	_send_title = {{ send_title? 'true':'false' }};
