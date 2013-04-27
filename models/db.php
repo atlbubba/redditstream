@@ -2,6 +2,15 @@
 
 require_once __ROOT__.'/shared/esql.inc.php';
 
+class ErrorLog {
+	static function Insert($error_code, $error_message) {
+		return ESQL::Insert('error_log', array(
+			'error_code' => $error_code,
+			'error_message'=>$error_message
+		));
+	}
+}
+
 class PageInfo {
 	static function Insert($thread_id, $title) {
 		return ESQL::Insert('page_info', array(

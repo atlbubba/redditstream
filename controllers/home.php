@@ -42,7 +42,8 @@ $app->get('/comments/:id/', function($id) use ($app) {
 		'thread_id' => $id,
 		'root' => $fs_root,
 		'send_title' => $send_title,
-		'is_prod' => $is_prod));
+		'is_prod' => $is_prod
+	));
 });
 
 $app->get('/pageusage/increment/:id', function($id) use ($app) {
