@@ -6,11 +6,23 @@
 
 <title>reddit-stream</title>
 
-<link rel="stylesheet" href="{{root}}/content/css/thread.css" type="text/css">
+{% if is_prod %}
+	<link rel="stylesheet" href="{{root}}/content/css/thread.css" type="text/css">
+{% else %}
+	<link rel="stylesheet" href="{{root}}/content/css/base.css" type="text/css">
+	<link rel="stylesheet" href="{{root}}/content/css/mobile.css" type="text/css" media="only screen and (max-width:600px)">
+{% endif %}
 
 
 <script src='//cdnjs.cloudflare.com/ajax/libs/mootools/1.4.5/mootools-core-full-compat-yc.js' type='text/javascript'></script>
-<script src='{{root}}/content/js/thread.js' type='text/javascript'></script>
+
+{% if is_prod %}
+	<script src='{{root}}/content/js/thread.js' type='text/javascript'></script>
+{% else %}
+	<script src='{{root}}/content/js/mootools-1.4.0.1-more.js' type='text/javascript'></script>
+	<script src='{{root}}/content/js/rs-lib.js' type='text/javascript'></script>
+	<script src='{{root}}/content/js/comments.js' type='text/javascript'></script>
+{% endif %}
 
 <script type='text/javascript'>
 	_fs_root = '{{root}}'
